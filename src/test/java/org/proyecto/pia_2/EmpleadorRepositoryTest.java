@@ -22,7 +22,7 @@ public class EmpleadorRepositoryTest {
     EntornoTrabajo entornoTrabajo;
     @BeforeEach
     void setUp() {
-        empleador = new Empleador("Mauricio","mauricio45nove@gmail.com","karmaland756");
+        empleador = new Empleador("nombre","empleado@gmail.com","19282");
         entornoTrabajo = new EntornoTrabajo("Equipo Fantastico", "Un equipo bueno",empleador);
         empleador.getEntornosDeTrabajo().add(entornoTrabajo);
         empleadorRepository.save(empleador);
