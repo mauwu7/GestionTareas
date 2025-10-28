@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-
 
 @RestController
 public class EmpleadorController {
@@ -25,12 +23,12 @@ public class EmpleadorController {
         return new ResponseEntity<Empleador>(empleador, HttpStatus.CREATED);
     }
 
-    @PostMapping("/agregarEntornos/{idEmpleador}")
-    ResponseEntity<EntornoTrabajo> agregarEntornosEmpleadores(@RequestBody EntornoTrabajo entornoTrabajo, @PathVariable Long idEmpleador){
+    @PutMapping("/agregarEntornos/{idEmpleador}")
+    ResponseEntity<Empleador> agregarEntornosEmpleadores(@RequestBody EntornoTrabajo entornoTrabajo, @PathVariable Long idEmpleador){
         Empleador empleador = empleadorRepository.findById(idEmpleador).orElse(null);
-        empleador.getEntornosDeTrabajo().add(entornoTrabajo);
+        empleador.getEntornosDeTrabajo().add(entornoTrabajo); //Añadir Excepcion
         empleadorRepository.save(empleador);
-        return new ResponseEntity<EntornoTrabajo>(entornoTrabajo, HttpStatus.OK);
+        return new ResponseEntity<Empleador>(empleador,HttpStatus.OK);
     }
     @GetMapping("/requestEmpleador")
     public List<Empleador> obtenerEmpleadores(){
@@ -38,10 +36,13 @@ public class EmpleadorController {
     }
 
     @PutMapping("/editarEmpleador/{id}")
-    Empleador EditarEmpleador(@RequestBody Empleador empleador, @PathVariable Long id){
+    ResponseEntity<Empleador> EditarEmpleador(@RequestBody Empleador empleador, @PathVariable Long id){
         Empleador empleadorEditado = empleadorRepository.findById(id).orElse(null);
-        empleadorEditado.setEmail(empleador.getEmail());
-        return empleadorRepository.save(empleadorEditado);
+        empleadorEditado.setEmail(empleador.getEmail()); // AÑADIR EXCEPCION
+        empleadorEditado.setUsername(empleador.getUsername());
+        empleadorEditado.setPassword(empleador.getPassword());
+        empleadorRepository.save(empleadorEditado);
+        return new ResponseEntity<Empleador>(empleadorEditado,HttpStatus.OK);
     }
 
     @DeleteMapping("/eliminarEmpleador/{id}")

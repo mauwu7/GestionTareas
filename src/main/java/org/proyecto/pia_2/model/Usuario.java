@@ -1,5 +1,6 @@
 package org.proyecto.pia_2.model;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.NaturalId;
@@ -20,6 +21,7 @@ public abstract class Usuario {
 
 
     @NotEmpty
+    @Email
     private String email;
 
     @NotEmpty
