@@ -1,6 +1,7 @@
 package org.proyecto.pia_2.service.impl;
-import org.proyecto.pia_2.exception.EmpleadorNotFoundException;
-import org.proyecto.pia_2.exception.EntornoTrabajoException;
+import jakarta.transaction.Transactional;
+import org.proyecto.pia_2.exception.UsuarioNotFoundException;
+import org.proyecto.pia_2.exception.UsuarioRegistradoException;
 import org.proyecto.pia_2.model.Empleador;
 import org.proyecto.pia_2.model.EntornoTrabajo;
 import org.proyecto.pia_2.repository.EmpleadorRepository;
@@ -19,42 +20,35 @@ public class EmpleadorServiceimpl implements EmpleadorService {
         this.empleadorRepository = empleadorRepository;
     }
 
-    //Añadir validaciones
     @Override
-    public Empleador agregarEntornoTrabajo(EntornoTrabajo entornoTrabajo, Long id) throws EntornoTrabajoException {
-        Empleador empleadorEditado = empleadorRepository.findById(id).orElseThrow();
+    public Empleador agregarEntornoTrabajo(EntornoTrabajo entornoTrabajo, Long id) throws UsuarioNotFoundException {
+        Empleador empleadorEditado = empleadorRepository.findById(id).orElseThrow(() -> new UsuarioNotFoundException("No existe el empleado con el id: " + id));
         empleadorEditado.getEntornosDeTrabajo().add(entornoTrabajo);
         empleadorRepository.save(empleadorEditado);
         return empleadorEditado;
     }
-
-    //Añadir validaciones
     @Override
-    public void agregarEmpleador(Empleador empleador) {
-        List<Empleador> empleadores = empleadorRepository.findAll();
-
-        for (Empleador empleador1 : empleadores) {
-            if(empleador1.getEmail().equals(empleador.getEmail())){
-                //No se pueden registrar dos empleadores con el mismo email
-            }
-            else if(empleador1.getPassword().equals(empleador.getPassword())){
-                //Tampoco con la misma contraseña
-            }
+    public void agregarEmpleador(Empleador empleador) throws UsuarioRegistradoException {
+        if(empleadorRepository.existsByEmail(empleador.getEmail())){
+            throw new UsuarioRegistradoException("El email ya se encuentra registrado");
         }
-
-        empleadorRepository.save(empleador);
+        else if(empleadorRepository.existsByUsername(empleador.getUsername())){
+            throw new UsuarioRegistradoException("El nombre de usaurio ya se encuentra registrado");
+        }
+        else{
+            empleadorRepository.save(empleador);
+        }
     }
 
-
+    //Este metodo puede eliminarse despues
     @Override
-    public Empleador GetEmpleador(Long id) {
-        return null;
+    public Empleador GetEmpleador(Long id) throws UsuarioNotFoundException {
+        return empleadorRepository.findById(id).orElseThrow(()-> new UsuarioNotFoundException("No existe el empleador con el id: " + id));
     }
 
-    //Añadir validaciones
     @Override
-    public Empleador EditarEmpleador(Empleador empleador, Long id) throws EmpleadorNotFoundException {
-        Empleador  empleadorEditado = empleadorRepository.findById(id).orElseThrow();
+    public Empleador EditarEmpleador(Empleador empleador, Long id) throws UsuarioNotFoundException {
+        Empleador  empleadorEditado = empleadorRepository.findById(id).orElseThrow(() -> new UsuarioNotFoundException("El empleador con el id: " + id));
         empleadorEditado.setUsername(empleador.getUsername());
         empleadorEditado.setEmail(empleador.getEmail());
         empleadorEditado.setPassword(empleador.getPassword());
@@ -66,4 +60,23 @@ public class EmpleadorServiceimpl implements EmpleadorService {
     public List<Empleador> obtenerEmpleadores() {
         return empleadorRepository.findAll();
     }
+
+    @Override
+    public void EliminarEmpleador(Long id) throws UsuarioNotFoundException {
+        if(empleadorRepository.existsById(id)){
+            empleadorRepository.deleteById(id);
+        }
+        else{
+            throw new UsuarioNotFoundException("No existe el empleador con el id: " + id);
+        }
+    }
+
+    //Este metodo puede eliminarse despues
+    @Override
+    @Transactional //Mantener la anotacion, puede cambiar despues
+    public List<EntornoTrabajo> obtenerEntornoTrabajos(Long id) throws  UsuarioNotFoundException{
+        Empleador empladorBuscado= empleadorRepository.findById(id).orElseThrow(()-> new UsuarioNotFoundException("No existe el empleador con el id: " + id));
+        return empladorBuscado.getEntornosDeTrabajo();
+    }
+
 }
