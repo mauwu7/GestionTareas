@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.proyecto.pia_2.controller.EmpleadorController;
 import org.proyecto.pia_2.model.Empleador;
 import org.proyecto.pia_2.repository.EmpleadorRepository;
+import org.proyecto.pia_2.service.EmpleadorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
