@@ -22,10 +22,11 @@ public abstract class Usuario {
 
     @NotEmpty
     @Email
+    @NaturalId
     private String email;
 
     @NotEmpty
-    @Size(min = 5, max = 15)
+    @Size(min = 5, max = 30)
     @NaturalId
     private String password;
 

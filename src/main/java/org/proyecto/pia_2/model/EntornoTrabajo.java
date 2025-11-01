@@ -22,7 +22,6 @@ public class EntornoTrabajo {
 
     @NotEmpty
     @Size(min = 7, max = 30)
-    @NaturalId
     private String descripcion;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -83,11 +82,11 @@ public class EntornoTrabajo {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof EntornoTrabajo that)) return false;
-        return Objects.equals(nombre, that.nombre) && Objects.equals(descripcion, that.descripcion);
+        return Objects.equals(nombre, that.nombre);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nombre, descripcion);
+        return Objects.hashCode(nombre);
     }
 }
