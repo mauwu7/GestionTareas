@@ -1,7 +1,7 @@
 package org.proyecto.pia_2.exception;
 
-public class EmpleadorNotFoundException extends RuntimeException {
-    public EmpleadorNotFoundException(String message) {
+public class UsuarioNotFoundException extends Exception {
+    public UsuarioNotFoundException(String message) {
         super(message);
     }
 }
