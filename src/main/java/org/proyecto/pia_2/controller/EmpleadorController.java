@@ -1,6 +1,8 @@
 package org.proyecto.pia_2.controller;
 import jakarta.validation.Valid;
+import org.proyecto.pia_2.exception.EquipoRegistradoException;
 import org.proyecto.pia_2.exception.UsuarioNotFoundException;
+import org.proyecto.pia_2.exception.UsuarioRegistradoException;
 import org.proyecto.pia_2.model.Empleador;
 import org.proyecto.pia_2.model.EntornoTrabajo;
 import org.proyecto.pia_2.service.impl.EmpleadorServiceimpl;
@@ -20,13 +22,12 @@ public class EmpleadorController {
     }
 
     @PostMapping("/addEmpleador")
-    ResponseEntity<Empleador> guardarEmpleador(@RequestBody @Valid Empleador empleador){
-        empleadorService.agregarEmpleador(empleador);
-        return new ResponseEntity<Empleador>(empleador, HttpStatus.CREATED);
+    ResponseEntity<Empleador> guardarEmpleador(@RequestBody @Valid Empleador empleador) throws UsuarioRegistradoException{
+        return new ResponseEntity<Empleador>(empleadorService.agregarEmpleador(empleador), HttpStatus.CREATED);
     }
 
     @PutMapping("/agregarEntornos/{idEmpleador}")
-    ResponseEntity<Empleador> agregarEntornosEmpleadores(@RequestBody @Valid EntornoTrabajo entornoTrabajo, @PathVariable Long idEmpleador) throws UsuarioNotFoundException{
+    ResponseEntity<Empleador> agregarEntornosEmpleadores(@RequestBody @Valid EntornoTrabajo entornoTrabajo, @PathVariable Long idEmpleador) throws UsuarioNotFoundException, EquipoRegistradoException {
         Empleador empleador = empleadorService.agregarEntornoTrabajo(entornoTrabajo, idEmpleador);
         return new ResponseEntity<Empleador>(empleador,HttpStatus.OK);
     }
@@ -36,7 +37,7 @@ public class EmpleadorController {
     }
 
     @PutMapping("/editarEmpleador/{id}")
-    ResponseEntity<Empleador> EditarEmpleador(@RequestBody @Valid Empleador empleador, @PathVariable Long id) throws UsuarioNotFoundException {
+    ResponseEntity<Empleador> EditarEmpleador(@RequestBody @Valid Empleador empleador, @PathVariable Long id) throws UsuarioNotFoundException, UsuarioRegistradoException {
         Empleador empleadorEditado = empleadorService.EditarEmpleador(empleador, id);
         return new ResponseEntity<Empleador>(empleadorEditado,HttpStatus.OK);
     }
