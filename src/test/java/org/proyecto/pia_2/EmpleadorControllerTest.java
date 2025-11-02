@@ -20,13 +20,19 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+//Se integrara en este clase el test del servicio de empleador
 @WebMvcTest(value= EmpleadorController.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class EmpleadorControllerTest {
+
     @Autowired
     private MockMvc mockMvc;
+
     @MockBean
     EmpleadorRepository empleadorRepository;
+
+    @MockBean
+    EmpleadorService empleadorService;
 
     private Empleador empleador;
 
