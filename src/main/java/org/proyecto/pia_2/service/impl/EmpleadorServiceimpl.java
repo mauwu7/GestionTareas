@@ -1,10 +1,12 @@
 package org.proyecto.pia_2.service.impl;
 import jakarta.transaction.Transactional;
+import org.proyecto.pia_2.exception.EquipoRegistradoException;
 import org.proyecto.pia_2.exception.UsuarioNotFoundException;
 import org.proyecto.pia_2.exception.UsuarioRegistradoException;
 import org.proyecto.pia_2.model.Empleador;
 import org.proyecto.pia_2.model.EntornoTrabajo;
 import org.proyecto.pia_2.repository.EmpleadorRepository;
+import org.proyecto.pia_2.repository.EntornoTrabajoRepository;
 import org.proyecto.pia_2.service.EmpleadorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import java.util.List;
 public class EmpleadorServiceimpl implements EmpleadorService {
 
     EmpleadorRepository empleadorRepository;
+    EntornoTrabajoRepository entornoTrabajoRepository;
 
     @Autowired
     public EmpleadorServiceimpl(EmpleadorRepository empleadorRepository) {
@@ -21,14 +24,19 @@ public class EmpleadorServiceimpl implements EmpleadorService {
     }
 
     @Override
-    public Empleador agregarEntornoTrabajo(EntornoTrabajo entornoTrabajo, Long id) throws UsuarioNotFoundException {
+    public Empleador agregarEntornoTrabajo(EntornoTrabajo entornoTrabajo, Long id) throws UsuarioNotFoundException, EquipoRegistradoException {
         Empleador empleadorEditado = empleadorRepository.findById(id).orElseThrow(() -> new UsuarioNotFoundException("No existe el empleado con el id: " + id));
-        empleadorEditado.getEntornosDeTrabajo().add(entornoTrabajo);
-        empleadorRepository.save(empleadorEditado);
-        return empleadorEditado;
+        if(entornoTrabajoRepository.existsByNombre(entornoTrabajo.getNombre())){
+            throw new EquipoRegistradoException("El entorno de trabajo ya se encuentra registrado");
+        }
+        else{
+            empleadorEditado.getEntornosDeTrabajo().add(entornoTrabajo);
+            empleadorRepository.save(empleadorEditado);
+            return empleadorEditado;
+        }
     }
     @Override
-    public void agregarEmpleador(Empleador empleador) throws UsuarioRegistradoException {
+    public Empleador agregarEmpleador(Empleador empleador) throws UsuarioRegistradoException {
         if(empleadorRepository.existsByEmail(empleador.getEmail())){
             throw new UsuarioRegistradoException("El email ya se encuentra registrado");
         }
@@ -36,7 +44,7 @@ public class EmpleadorServiceimpl implements EmpleadorService {
             throw new UsuarioRegistradoException("El nombre de usaurio ya se encuentra registrado");
         }
         else{
-            empleadorRepository.save(empleador);
+            return empleadorRepository.save(empleador);
         }
     }
 
@@ -47,13 +55,23 @@ public class EmpleadorServiceimpl implements EmpleadorService {
     }
 
     @Override
-    public Empleador EditarEmpleador(Empleador empleador, Long id) throws UsuarioNotFoundException {
-        Empleador  empleadorEditado = empleadorRepository.findById(id).orElseThrow(() -> new UsuarioNotFoundException("El empleador con el id: " + id));
-        empleadorEditado.setUsername(empleador.getUsername());
-        empleadorEditado.setEmail(empleador.getEmail());
-        empleadorEditado.setPassword(empleador.getPassword());
-        empleadorRepository.save(empleadorEditado);
-        return empleadorEditado;
+    public Empleador EditarEmpleador(Empleador empleador, Long id) throws UsuarioNotFoundException, UsuarioRegistradoException {
+        Empleador  empleadorEditado = empleadorRepository.findById(id).orElseThrow(() -> new UsuarioNotFoundException("El empleador con el id: " + id + "no existe"));
+
+        if(empleadorRepository.existsByUsername(empleador.getUsername())){
+            throw new UsuarioRegistradoException("El nombre de usaurio ya se encuentra registrado");
+        }
+        else if(empleadorRepository.existsByEmail(empleador.getEmail())){
+            throw  new UsuarioRegistradoException("El email ya se encuentra registrado");
+        }
+        else{
+            empleadorEditado.setUsername(empleador.getUsername());
+            empleadorEditado.setEmail(empleador.getEmail());
+            empleadorEditado.setPassword(empleador.getPassword());
+            empleadorRepository.save(empleadorEditado);
+            return empleadorEditado;
+        }
+
     }
 
     @Override
