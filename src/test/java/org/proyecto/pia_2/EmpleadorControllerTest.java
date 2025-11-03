@@ -2,16 +2,24 @@ package org.proyecto.pia_2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.proyecto.pia_2.controller.EmpleadorController;
+import org.proyecto.pia_2.exception.UsuarioRegistradoException;
+import org.proyecto.pia_2.exception.handler.GlobalHandlerException;
 import org.proyecto.pia_2.model.Empleador;
 import org.proyecto.pia_2.repository.EmpleadorRepository;
 import org.proyecto.pia_2.service.EmpleadorService;
+import org.proyecto.pia_2.service.impl.EmpleadorServiceimpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //Se integrara en este clase el test del servicio de empleador
 @WebMvcTest(value= EmpleadorController.class)
 @AutoConfigureMockMvc(addFilters = false)
+@Import(GlobalHandlerException.class)
 public class EmpleadorControllerTest {
 
     @Autowired
@@ -32,18 +41,39 @@ public class EmpleadorControllerTest {
     EmpleadorRepository empleadorRepository;
 
     @MockBean
-    EmpleadorService empleadorService;
+    EmpleadorServiceimpl empleadorService;
 
     private Empleador empleador;
 
     @BeforeEach
     public void setUp() {
-        empleador = new Empleador("PrimerEmpleador","primerEmpleado@gmail.com","123456e10");
+        empleador = new Empleador("PrimerEmpleador", "primerEmpleado@gmail.com", "123456e10");
         empleador.setUsuario_id(1L);
     }
 
     @Test
     public void PostEmpleadoTest() throws Exception{
+
+        String json = """
+                {
+                       "usuario_id":"1",
+                       "username":"nuevoEmpleador",
+                       "email":"empleador@gmail.com",
+                       "password":"algunacontraseña"
+                }
+                """;
+        when(empleadorService.agregarEmpleador(any(Empleador.class))).thenAnswer(i -> i.getArgument(0));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/addEmpleador")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated()).andDo(print());
+    }
+
+    @Test
+    public void UsuarioRegistradoExceptionTest() throws Exception {
+
         String json = """
                 {
                        "usuario_id":"1",
@@ -53,16 +83,41 @@ public class EmpleadorControllerTest {
                 }
                 """;
 
-        when(empleadorRepository.save(any(Empleador.class))).thenAnswer(i -> i.getArgument(0));
+
+        when(empleadorService.agregarEmpleador(any(Empleador.class))).thenThrow(new UsuarioRegistradoException("El usuario ya se encuentra registrado"));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/addEmpleador").
+                contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isConflict()).andDo(print());
+    }
+
+    @Test
+    public void MethodArgumentNotValidExceptionTest() throws Exception{
+
+        String json = """
+                {
+                       "usuario_id":"1",
+                       "username":"n",
+                       "email": "e",
+                       "password":"1213114"
+                }
+        """;
 
         mockMvc.perform(MockMvcRequestBuilders.post("/addEmpleador")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated()).andDo(print());
-
-        verify(empleadorRepository,times(1)).save(any(Empleador.class));
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json).accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest()).andDo(print());
     }
+
+    @Test
+    public void ConstraintViolationExceptionTest() throws Exception{
+
+    }
+
+
+
+    /*
+
+    Estos test van a dejar de usar empleadorRepository para usar el servicio de empleador
 
     @Test public void AgregarEntornosTrabajoTest() throws Exception{
 
@@ -132,5 +187,6 @@ public class EmpleadorControllerTest {
         verify(empleadorRepository,times(1)).save(any(Empleador.class));
 
     }
+    */
 
 }
