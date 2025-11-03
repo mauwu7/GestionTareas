@@ -1,9 +1,9 @@
 package org.proyecto.pia_2.exception.model;
 
-public class ErrorPersonalizado {
+public class ErrorResponse {
     private String field;
     private String errorMessage;
-    public ErrorPersonalizado(String field, String errorMessage){
+    public ErrorResponse(String field, String errorMessage){
         this.field = field;
         this.errorMessage = errorMessage;
     }
