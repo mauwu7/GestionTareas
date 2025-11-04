@@ -1,6 +1,8 @@
 package org.proyecto.pia_2.controller;
 
+import org.apache.coyote.Response;
 import org.proyecto.pia_2.model.Empleado;
+import org.proyecto.pia_2.model.EntornoTrabajo;
 import org.proyecto.pia_2.model.Equipo;
 import org.proyecto.pia_2.repository.EquipoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,7 @@ public class EquipoController {
     @PostMapping("/addEquipo")
     public ResponseEntity<Equipo> addEquipo(@RequestBody Equipo equipo){
         equipoRepository.save(equipo);
-        return new ResponseEntity<>(equipo, HttpStatus.OK);
+        return new ResponseEntity<>(equipo, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/deleteEquipo/{id}")
@@ -33,7 +35,7 @@ public class EquipoController {
         return equipoRepository.findAll();
     }
 
-    @PutMapping("/editarEquipo")
+    @PutMapping("/editarEquipo/{id}")
     public ResponseEntity<Equipo> editEquipo(@RequestBody Equipo equipo, @PathVariable Long id){
         Equipo equipoEdit = equipoRepository.findById(id).orElse(null);
         if(equipoEdit == null){
@@ -46,5 +48,19 @@ public class EquipoController {
         return new ResponseEntity<>(equipoRepository.save(equipoEdit), HttpStatus.OK);
     }
 
+    @PutMapping("/agregarEntornoEquipo/{idEquipo}")
+    public ResponseEntity<Equipo> asignarEntornoTrabajo(@RequestBody EntornoTrabajo entornoTrabajo, @PathVariable Long idEquipo){
+        Equipo equipo = equipoRepository.findById(idEquipo).orElse(null);
+        equipo.setEntornoTrabajo(entornoTrabajo);
+        equipoRepository.save(equipo);
+        return new ResponseEntity<>(equipo, HttpStatus.OK);
+    }
 
+    @PutMapping("/agregarEmpleadoEquipo/{idEquipo}")
+    public ResponseEntity<Equipo> asignarEmpleadoEquipo(@RequestBody Empleado empleado, @PathVariable Long idEquipo){
+        Equipo equipo = equipoRepository.findById(idEquipo).orElse(null);
+        equipo.getEmpleados().add(empleado);
+        equipoRepository.save(equipo);
+        return new ResponseEntity<>(equipo, HttpStatus.OK);
+    }
 }

@@ -41,9 +41,6 @@ public class EmpleadoControllerTest {
 
     private Empleado empleado;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @BeforeEach
     public void setUp() {
         empleado = new Empleado("manuel", "chele@example.com", "1234");

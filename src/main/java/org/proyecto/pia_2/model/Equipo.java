@@ -11,7 +11,7 @@ public class Equipo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer equipo_id;
+    private Long equipo_id;
 
     @NotEmpty
     @NaturalId
@@ -28,13 +28,13 @@ public class Equipo {
     private List<TareaIndividual> tareas = new ArrayList<>();
 
      */
-    public Equipo() {}
+    public Equipo(String nombreEquipo) {setNombreEquipo(nombreEquipo);}
 
-    public Integer getEquipo_id() {
+    public Long getEquipo_id() {
         return equipo_id;
     }
 
-    public void setEquipo_id(Integer equipo_id) {
+    public void setEquipo_id(Long equipo_id) {
         this.equipo_id = equipo_id;
     }
 
