@@ -2,27 +2,22 @@ package org.proyecto.pia_2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.proyecto.pia_2.controller.EmpleadorController;
+import org.proyecto.pia_2.exception.EquipoRegistradoException;
+import org.proyecto.pia_2.exception.UsuarioNotFoundException;
 import org.proyecto.pia_2.exception.UsuarioRegistradoException;
 import org.proyecto.pia_2.exception.handler.GlobalHandlerException;
 import org.proyecto.pia_2.model.Empleador;
+import org.proyecto.pia_2.model.EntornoTrabajo;
 import org.proyecto.pia_2.repository.EmpleadorRepository;
-import org.proyecto.pia_2.service.EmpleadorService;
 import org.proyecto.pia_2.service.impl.EmpleadorServiceimpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -37,18 +32,20 @@ public class EmpleadorControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+
+
     @MockBean
     EmpleadorRepository empleadorRepository;
 
     @MockBean
     EmpleadorServiceimpl empleadorService;
 
-    private Empleador empleador;
+
 
     @BeforeEach
     public void setUp() {
-        empleador = new Empleador("PrimerEmpleador", "primerEmpleado@gmail.com", "123456e10");
-        empleador.setUsuario_id(1L);
+        //Empleador empleador = new Empleador("PrimerEmpleador", "primerEmpleado@gmail.com", "123456e10");
+        //empleador.setUsuario_id(1L);
     }
 
     @Test
@@ -110,6 +107,56 @@ public class EmpleadorControllerTest {
 
     @Test
     public void ConstraintViolationExceptionTest() throws Exception{
+        String json = """
+                {
+                "entorno_id":"",
+                "nombre":"EquipoMaravilloso",
+                "descripcion":"Un equipo dedicado a ser maravilloso"
+                }
+                """;
+
+        mockMvc.perform((MockMvcRequestBuilders.put("/agregarEntornos/{idEmpleador}",-2L))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json).accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest()).andDo(print());
+    }
+
+    @Test
+    public void EquipoRegistradoException() throws Exception{
+
+        String json = """
+                {
+                "entorno_id":"1",
+                "nombre":"EquipoMaravilloso",
+                "descripcion":"Un equipo dedicado a ser maravilloso"
+                }
+                """;
+
+        when(empleadorService.agregarEntornoTrabajo(any(EntornoTrabajo.class),eq(1L))).thenThrow(new EquipoRegistradoException("El equipo ya se encuentra registrado"));
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/agregarEntornos/{idEmpleador}",1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json).accept(MediaType.APPLICATION_JSON)).andExpect(status().isConflict()).andDo(print());
+
+        verify(empleadorService,times(1)).agregarEntornoTrabajo(any(EntornoTrabajo.class),eq(1L));
+
+    }
+
+    @Test
+    public void UsuarioNotFoundExceptionTest() throws Exception{
+        String json = """
+                {
+                       "usuario_id":"1",
+                       "username":"n",
+                       "email": "e",
+                       "password":"1213114"
+                }
+        """;
+        doThrow(new UsuarioNotFoundException("No hay ningun usuario registrado con ese ID")).when(empleadorService).EliminarEmpleador(eq(1L));
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/eliminarEmpleador/{idEmpleador}",1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound()).andDo(print());
 
     }
 
