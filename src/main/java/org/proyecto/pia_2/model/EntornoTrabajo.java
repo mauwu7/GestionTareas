@@ -16,12 +16,12 @@ public class EntornoTrabajo {
     private Long entorno_id;
 
     @NotEmpty
-    @Size(min = 7, max = 30)
+    @Size(min = 5, max = 50)
     @NaturalId
     private String nombre;
 
     @NotEmpty
-    @Size(min = 7, max = 30)
+    @Size(min = 5, max = 70)
     private String descripcion;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -37,6 +37,11 @@ public class EntornoTrabajo {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.empleador = empleador;
+    }
+
+    public EntornoTrabajo(String nombre, String descripcion){ /// Se añade nuevo constructor
+        this.nombre = nombre;
+        this.descripcion = descripcion;
     }
 
     public Long getEntorno_id() {
