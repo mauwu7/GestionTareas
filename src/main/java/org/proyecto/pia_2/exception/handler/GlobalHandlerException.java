@@ -6,8 +6,8 @@ import org.proyecto.pia_2.exception.UsuarioNotFoundException;
 import org.proyecto.pia_2.exception.UsuarioRegistradoException;
 import org.proyecto.pia_2.exception.model.ErrorHandlerResponse;
 import org.proyecto.pia_2.exception.model.ErrorResponse;
-import org.springframework.boot.autoconfigure.batch.BatchTaskExecutor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,39 +17,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 @RestControllerAdvice
 public class GlobalHandlerException {
-    /*
-    Estos metodos tienen que actualizarse con la nueva clase ErrorHandlerResponse
 
     @ExceptionHandler(UsuarioNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleUsuarioNotFoundException(UsuarioNotFoundException ex){
-        return new ErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND.value());
+    public ErrorHandlerResponse usuarioNotFound(UsuarioNotFoundException ex){
+        List<ErrorResponse> errores = new ArrayList<>();
+        errores.add(new ErrorResponse(null,ex.getMessage()));
+        return new ErrorHandlerResponse(HttpStatus.NOT_FOUND.value(), errores);
+    }
+
+    @ExceptionHandler(EquipoRegistradoException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorHandlerResponse handleEquipoRegistradoException(EquipoRegistradoException ex) {
+        List<ErrorResponse> errores = new ArrayList<>();
+        errores.add(new ErrorResponse(null, ex.getMessage()));
+        return new ErrorHandlerResponse(HttpStatus.CONFLICT.value(), errores);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ValidationErrorResponse handleConstraintViolationException(ConstraintViolationException ex){
-        ValidationErrorResponse response = new ValidationErrorResponse();
-        for(ConstraintViolation cv : ex.getConstraintViolations()){
-            response.getViolations().add(new ConstrViolation(cv.getPropertyPath().toString(),cv.getMessage()));
-        }
-        return response;
-    }
-    @ExceptionHandler(EquipoRegistradoException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleEquipoRegistradoException(EquipoRegistradoException ex){
-        return new ErrorResponse(ex.getMessage(), HttpStatus.CONFLICT.value());
-    }
-
-     */
-
-    @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorHandlerResponse handleConstraintViolationException(ConstraintViolationException ex){
-
-        return null;
+        ArrayList<ErrorResponse> errores = new ArrayList<>();
+        for(ConstraintViolation<?> violation : ex.getConstraintViolations()){
+            errores.add(new ErrorResponse(violation.getPropertyPath().toString(), violation.getMessage()));
+        }
+        return new ErrorHandlerResponse(HttpStatus.BAD_REQUEST.value(),errores);
     }
 
     @ExceptionHandler(UsuarioRegistradoException.class)
@@ -78,6 +73,21 @@ public class GlobalHandlerException {
         }
 
         return new ErrorHandlerResponse(HttpStatus.BAD_REQUEST.value(), errores );
+    }
+
+    //Verificar despues que no pueda generar un problema
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorHandlerResponse handleHttpMessageNotReadableException(HttpMessageNotReadableException ex){
+        List<ErrorResponse> errores = new ArrayList<>();
+        String mensaje = ex.getMessage();
+        for(int index = 0; index < mensaje.length(); index++){
+            if(mensaje.charAt(index) == ':'){
+                mensaje = mensaje.substring(0,index);
+            }
+        }
+        errores.add(new ErrorResponse(null, mensaje));
+        return new ErrorHandlerResponse(HttpStatus.BAD_REQUEST.value(), errores);
     }
 
 }
