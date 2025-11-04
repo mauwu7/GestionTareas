@@ -92,8 +92,8 @@ public class EmpleadorServiceimpl implements EmpleadorService {
     //Este metodo puede eliminarse despues
     @Override
     @Transactional //Mantener la anotacion, puede cambiar despues
-    public List<EntornoTrabajo> obtenerEntornoTrabajos(Long id) throws  UsuarioNotFoundException{
-        Empleador empladorBuscado= empleadorRepository.findById(id).orElseThrow(()-> new UsuarioNotFoundException("No existe el empleador con el id: " + id));
+    public List<EntornoTrabajo> obtenerEntornoTrabajos(Long id) throws  UsuarioNotFoundException{ //Obtener los entornos de trabajo de un usauario
+        Empleador empladorBuscado= empleadorRepository.findById(id).orElseThrow(()-> new UsuarioNotFoundException("No existe ningun usuario registrado con el id: "+ id));
         return empladorBuscado.getEntornosDeTrabajo();
     }
 
