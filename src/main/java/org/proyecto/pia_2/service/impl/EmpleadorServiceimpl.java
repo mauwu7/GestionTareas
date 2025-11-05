@@ -1,12 +1,8 @@
 package org.proyecto.pia_2.service.impl;
 import jakarta.transaction.Transactional;
-import org.proyecto.pia_2.exception.EquipoRegistradoException;
-import org.proyecto.pia_2.exception.UsuarioNotFoundException;
-import org.proyecto.pia_2.exception.UsuarioRegistradoException;
-import org.proyecto.pia_2.model.Empleador;
-import org.proyecto.pia_2.model.EntornoTrabajo;
-import org.proyecto.pia_2.repository.EmpleadorRepository;
-import org.proyecto.pia_2.repository.EntornoTrabajoRepository;
+import org.proyecto.pia_2.exception.*;
+import org.proyecto.pia_2.model.*;
+import org.proyecto.pia_2.repository.*;
 import org.proyecto.pia_2.service.EmpleadorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,12 +11,16 @@ import java.util.List;
 @Service
 public class EmpleadorServiceimpl implements EmpleadorService {
 
+    TareaRepository tareaRepository;
     EmpleadorRepository empleadorRepository;
     EntornoTrabajoRepository entornoTrabajoRepository;
+    EquipoRepository equipoRepository;
+    EmpleadoRepository empleadoRepository;
 
     @Autowired
-    public EmpleadorServiceimpl(EmpleadorRepository empleadorRepository) {
+    public EmpleadorServiceimpl(EmpleadorRepository empleadorRepository, TareaRepository tareaRepository) {
         this.empleadorRepository = empleadorRepository;
+        this.tareaRepository = tareaRepository;
     }
 
     @Override
@@ -96,5 +96,87 @@ public class EmpleadorServiceimpl implements EmpleadorService {
         Empleador empladorBuscado= empleadorRepository.findById(id).orElseThrow(()-> new UsuarioNotFoundException("No existe ningun usuario registrado con el id: "+ id));
         return empladorBuscado.getEntornosDeTrabajo();
     }
+
+    //A lo mejor estas clases deberian estar anotadas con @Transactional, igual despues se puede cambiar
+
+    @Transactional
+    @Override //Ver si no genera ningun error
+    public EntornoTrabajo AgregarEquipoEnEntornoDeTrabajo(Equipo equipo, String nombreEntornoDeTrabajo) throws EquipoNotFoundException,EquipoRegistradoException {
+        if(entornoTrabajoRepository.existsByNombre(nombreEntornoDeTrabajo)){
+            if(equipoRepository.existsByNombreEquipo(equipo.getNombreEquipo())){
+                throw new EquipoRegistradoException("El equipo con nombre: "+ equipo.getNombreEquipo()+" ya se encuentra registrado");
+            }
+            else{
+                EntornoTrabajo entornoTrabajo = entornoTrabajoRepository.findByNombre(nombreEntornoDeTrabajo);
+                entornoTrabajo.getEquiposEntornos().add(equipo);
+                entornoTrabajoRepository.save(entornoTrabajo);
+                return entornoTrabajo;
+            }
+        }
+        else{
+            throw new EquipoNotFoundException("No se tiene registro de ningun entorno de trabajo con nombre: " + nombreEntornoDeTrabajo);
+        }
+    }
+
+    @Override
+    @Transactional
+    public EntornoTrabajo EditarEntorno(EntornoTrabajo entornoTrabajoEditado,String nombreEntornoDeTrabajo) throws EquipoNotFoundException, EquipoRegistradoException {
+        if(entornoTrabajoRepository.existsByNombre(nombreEntornoDeTrabajo)){
+            if(entornoTrabajoRepository.existsByNombre(entornoTrabajoEditado.getNombre())){
+                throw new EquipoRegistradoException("El nombre que se ingreso ya se encuentra registrado");
+            }
+            else{
+                EntornoTrabajo entornoTrabajo = entornoTrabajoRepository.findByNombre(nombreEntornoDeTrabajo);
+                entornoTrabajo.setNombre(entornoTrabajoEditado.getNombre());
+                return entornoTrabajoRepository.save(entornoTrabajo);
+            }
+        }
+        else throw new EquipoNotFoundException("No existe ningun registro de un entorno registrado con nombre: " + nombreEntornoDeTrabajo);
+    }
+
+    @Override
+    public void EliminarEntornoDeTrabajo(String nombre) throws EquipoNotFoundException {
+        if(entornoTrabajoRepository.existsByNombre(nombre)){
+            EntornoTrabajo entornoTrabajoEliminado = entornoTrabajoRepository.findByNombre(nombre);
+            entornoTrabajoRepository.delete(entornoTrabajoEliminado);
+        }
+        else{
+            throw new EquipoNotFoundException("No se encuentra ningun entorno registrado con nombre: " + nombre);
+        }
+    }
+
+
+    @Transactional
+    @Override
+    public Equipo AgregarEmpleadoaEquipo(Empleado empleado, String nombreDeEquipo) throws EquipoNotFoundException, UsuarioRegistradoException {
+        if(equipoRepository.existsByNombreEquipo(nombreDeEquipo)){
+            if(empleadorRepository.existsByUsername(empleado.getUsername()) || empleadorRepository.existsByEmail(empleado.getEmail())){
+                throw new UsuarioRegistradoException("Debe introducirse un email o username que no este registrado");
+            }
+            else{
+                Equipo equipo = equipoRepository.findByNombreEquipo(nombreDeEquipo);
+                equipo.getEmpleados().add(empleado);
+                return equipoRepository.save(equipo);
+            }
+        }
+        else{
+            throw new EquipoNotFoundException("No se encuentra ningun equipo registrado con el nombre: " + nombreDeEquipo);
+        }
+    }
+
+    @Transactional
+    @Override
+    public Empleado AgregarTarea(TareaIndividual tareaIndividual, String nombreEmpleado) throws UsuarioNotFoundException {
+        if(empleadoRepository.existsByUsername(nombreEmpleado)){
+            Empleado empleado = empleadoRepository.findEmpleadosByUsername(nombreEmpleado);
+            empleado.getTareasAsignadas().add(tareaIndividual);
+            return empleadoRepository.save(empleado);
+
+        }
+        else{
+            throw new UsuarioNotFoundException("No se encuentra ningun usuario registrado con el nombre: " + nombreEmpleado);
+        }
+    }
+
 
 }
