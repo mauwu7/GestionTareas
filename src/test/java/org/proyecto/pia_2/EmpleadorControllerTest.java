@@ -2,12 +2,14 @@ package org.proyecto.pia_2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.proyecto.pia_2.controller.EmpleadorController;
+import org.proyecto.pia_2.exception.EquipoNotFoundException;
 import org.proyecto.pia_2.exception.EquipoRegistradoException;
 import org.proyecto.pia_2.exception.UsuarioNotFoundException;
 import org.proyecto.pia_2.exception.UsuarioRegistradoException;
 import org.proyecto.pia_2.exception.handler.GlobalHandlerException;
 import org.proyecto.pia_2.model.Empleador;
 import org.proyecto.pia_2.model.EntornoTrabajo;
+import org.proyecto.pia_2.model.Equipo;
 import org.proyecto.pia_2.repository.EmpleadorRepository;
 import org.proyecto.pia_2.service.impl.EmpleadorServiceimpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +34,11 @@ public class EmpleadorControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-
-
     @MockBean
     EmpleadorRepository empleadorRepository;
 
     @MockBean
     EmpleadorServiceimpl empleadorService;
-
-
 
     @BeforeEach
     public void setUp() {
@@ -115,7 +113,7 @@ public class EmpleadorControllerTest {
                 }
                 """;
 
-        mockMvc.perform((MockMvcRequestBuilders.put("/agregarEntornos/{idEmpleador}",-2L))
+        mockMvc.perform((MockMvcRequestBuilders.post("/agregarEntornos/{idEmpleador}",-2L))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json).accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest()).andDo(print());
     }
@@ -133,7 +131,7 @@ public class EmpleadorControllerTest {
 
         when(empleadorService.agregarEntornoTrabajo(any(EntornoTrabajo.class),eq(1L))).thenThrow(new EquipoRegistradoException("El equipo ya se encuentra registrado"));
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/agregarEntornos/{idEmpleador}",1L)
+        mockMvc.perform(MockMvcRequestBuilders.post("/agregarEntornos/{idEmpleador}",1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json).accept(MediaType.APPLICATION_JSON)).andExpect(status().isConflict()).andDo(print());
 
@@ -142,7 +140,7 @@ public class EmpleadorControllerTest {
     }
 
     @Test
-    public void UsuarioNotFoundExceptionTest() throws Exception{
+    public void EliminarEmpleadorAndThrowUsuarioNotFoundExceptionTest() throws Exception{
         String json = """
                 {
                        "usuario_id":"1",
@@ -159,6 +157,22 @@ public class EmpleadorControllerTest {
                 .andExpect(status().isNotFound()).andDo(print());
 
     }
+
+    @Test
+    public void AgregarEquipoEnEntornoDeTrabajoTestAndThrowsEquipoNotFoundException() throws Exception {
+        String json = """
+                {
+                    "equipo_id":"1",
+                    "nombreEquipo":"EquipoMaravilloso"
+                }
+                """;
+
+        when(empleadorService.AgregarEquipoEnEntornoDeTrabajo(any(Equipo.class),anyString())).thenThrow(new EquipoNotFoundException("No se encuentra ningun equipo registrado con ese nombre"));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/agregarEquipos/{nombreEntorno}","Entorno de TRbajo")
+                .contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound()).andDo(print());
+    }
+
 
 
 
