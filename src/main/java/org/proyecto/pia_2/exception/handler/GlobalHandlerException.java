@@ -1,9 +1,7 @@
 package org.proyecto.pia_2.exception.handler;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
-import org.proyecto.pia_2.exception.EquipoRegistradoException;
-import org.proyecto.pia_2.exception.UsuarioNotFoundException;
-import org.proyecto.pia_2.exception.UsuarioRegistradoException;
+import org.proyecto.pia_2.exception.*;
 import org.proyecto.pia_2.exception.model.ErrorHandlerResponse;
 import org.proyecto.pia_2.exception.model.ErrorResponse;
 import org.springframework.http.HttpStatus;
@@ -17,9 +15,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
+//Ver si se puede agrupar despues
 @RestControllerAdvice
 public class GlobalHandlerException {
+
+    @ExceptionHandler(EquipoNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorHandlerResponse HandleEquipoNotFound(EquipoNotFoundException ex){
+        List<ErrorResponse> listaErrores = new ArrayList<>();
+        listaErrores.add(new ErrorResponse(null, "Equipo no encontrado"));
+        return new ErrorHandlerResponse(HttpStatus.NOT_FOUND.value(), listaErrores);
+    }
 
     @ExceptionHandler(UsuarioNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
