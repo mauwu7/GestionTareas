@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EntornoTrabajoRepository extends JpaRepository<EntornoTrabajo,Long> {
     boolean existsByNombre(String nombre);
+    EntornoTrabajo findByNombre(String nombre);
 }

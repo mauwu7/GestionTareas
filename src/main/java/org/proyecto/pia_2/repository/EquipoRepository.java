@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EquipoRepository extends JpaRepository<Equipo, Long> {
-
+    boolean existsByNombreEquipo(String nombreEquipo);
+    Equipo  findByNombreEquipo(String nombreEquipo);
 }
