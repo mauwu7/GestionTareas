@@ -19,6 +19,14 @@ import java.util.List;
 @RestControllerAdvice
 public class GlobalHandlerException {
 
+    @ExceptionHandler(TareaNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorHandlerResponse handleTareaNotFoundException(TareaNotFoundException ex){
+        List<ErrorResponse> errors = new ArrayList<>();
+        errors.add(new ErrorResponse(null, ex.getMessage()));
+        return new ErrorHandlerResponse(HttpStatus.NOT_FOUND.value(),errors);
+    }
+
     @ExceptionHandler(EquipoNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorHandlerResponse HandleEquipoNotFound(EquipoNotFoundException ex){
