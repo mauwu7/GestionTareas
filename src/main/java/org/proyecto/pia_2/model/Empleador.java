@@ -15,9 +15,7 @@ public class Empleador extends Usuario{
     public Empleador() {}
 
     public Empleador(String username, String email, String password) {
-        setUsername(username);
-        setEmail(email);
-        setPassword(password);
+        super(username, email, password);
     }
 
     public List<EntornoTrabajo> getEntornosDeTrabajo() {

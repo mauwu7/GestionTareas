@@ -9,9 +9,9 @@ public class Empleado extends  Usuario{
 
     private boolean privilegiosAdministrador;
 
-    @Id
+    /*@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long empleado_id;
+    private Long empleado_id;*/
 
     @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<TareaIndividual> tareasAsignadas = new ArrayList<>();
@@ -31,8 +31,8 @@ public class Empleado extends  Usuario{
 
     public Empleado() {}
 
-    public void setEmpleado_id(Long empleado_id) {this.empleado_id = empleado_id;}
-    public Long getEquipo_id() {return this.empleado_id;}
+    /*public void setEmpleado_id(Long empleado_id) {this.empleado_id = empleado_id;}
+    public Long getEquipo_id() {return this.empleado_id;}*/
 
     public List<String> getNotificaciones() {
         return notificaciones;

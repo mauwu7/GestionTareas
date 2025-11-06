@@ -31,6 +31,12 @@ public abstract class Usuario {
 
     public Usuario() {}
 
+    public Usuario(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
+
     public Long getUsuario_id() {
         return usuario_id;
     }
