@@ -1,35 +1,55 @@
 package org.proyecto.pia_2.model;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import org.proyecto.pia_2.model.groups.BasicInfo;
+import org.proyecto.pia_2.model.groups.EditedInfo;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.validation.annotation.Validated;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 
-
+//Puede que haya que implementar validacion por grupos
 @MappedSuperclass
+//@Validated({BasicInfo.class,EditedInfo.class})
 public abstract class Tarea {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tarea_id;
 
+    //@NotNull(groups = BasicInfo.class)
     @NotNull
     private String descripcion;
 
+    //@NotNull(groups = BasicInfo.class)
+    //@NotNull(groups = EditedInfo.class)
     @NotNull
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate fechaVencimiento;
 
+    //@NotNull(groups = BasicInfo.class)
     @NotNull
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate fechaCreacion;
 
+    //@NotNull(groups = BasicInfo.class)
+    //@NotNull(groups = EditedInfo.class)
+    @Min(1)
     @NotNull
     private Integer prioridad;
 
-    @NotNull
+    //@NotNull(groups = BasicInfo.class)
+    //@NotNull(groups = EditedInfo.class)
+    //@NotNull
     private String estado; // PENDIENTE, EN_PROGRESO, COMPLETADA
 
-    @ElementCollection //Administracion, contabilidad, etc.
+    @ElementCollection //Administracion, contabilidad etc
+    //@NotNull(groups = EditedInfo.class)
+    //@NotNull(groups = BasicInfo.class)
     private List<String> etiquetas = new ArrayList<>();
 
     /*
