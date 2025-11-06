@@ -51,5 +51,11 @@ public class Empleado extends  Usuario{
         this.tareasAsignadas = tareasAsignadas;
     }
 
+    public Equipo getEquipo() {
+        return equipo;
+    }
 
+    public void setEquipo(Equipo equipo) {
+        this.equipo = equipo;
+    }
 }
