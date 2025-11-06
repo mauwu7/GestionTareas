@@ -1,15 +1,14 @@
 package org.proyecto.pia_2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.proyecto.pia_2.DTO.TareaDTO;
 import org.proyecto.pia_2.controller.EmpleadorController;
 import org.proyecto.pia_2.exception.EquipoNotFoundException;
 import org.proyecto.pia_2.exception.EquipoRegistradoException;
 import org.proyecto.pia_2.exception.UsuarioNotFoundException;
 import org.proyecto.pia_2.exception.UsuarioRegistradoException;
 import org.proyecto.pia_2.exception.handler.GlobalHandlerException;
-import org.proyecto.pia_2.model.Empleador;
-import org.proyecto.pia_2.model.EntornoTrabajo;
-import org.proyecto.pia_2.model.Equipo;
+import org.proyecto.pia_2.model.*;
 import org.proyecto.pia_2.repository.EmpleadorRepository;
 import org.proyecto.pia_2.service.impl.EmpleadorServiceimpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +19,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.time.LocalDate;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -171,6 +173,52 @@ public class EmpleadorControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/agregarEquipos/{nombreEntorno}","Entorno de TRbajo")
                 .contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound()).andDo(print());
+    }
+
+    @Test
+    public void AgregarTareaEnEmpleado()throws Exception{ //Para poder pasar este test hay que redefinir el valor que devuelve el metodo
+                                                            //agregar tarea en el servicio y el controlador
+
+        String json = """
+                {
+                "tarea_id":"1",
+                "descripcion":"Una tarea que se ha registrado",
+                "fechaVencimiento":"2007-12-03",
+                "fechaCreacion":"2007-12-10",
+                "prioridad":"3",
+                "estado":"PENDIENTE",
+                "etiquetas":["buenas","tardes"]
+                }
+                """;
+
+        when(empleadorService.AgregarTarea(any(TareaIndividual.class),anyString())).thenAnswer(i-> i.getArgument(0));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/agregarTarea/{nombreEmpleado}","Javier")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated()).andDo(print());
+    }
+
+    @Test
+    public void EditarTareasEnEmpleado()throws Exception{ //Solo se prueba que no genere algun problema.Es indiferente lo que regrese el mock
+        String json= """
+                {
+                "fechaVencimiento":"2007-12-29",
+                "prioridad":"2",
+                "estado":"EN PROGRESO"
+                }
+                """;
+
+        Empleado empleado = new Empleado("ajsjaj","jajja@gmail.com","jasssa22");
+
+        when(empleadorService.EditarTarea(any(TareaDTO.class),eq(1L),anyString())).thenReturn(empleado);
+
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/editarTarea/{idTarea}/{nombreEmpleado}",1L,"Javier")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andDo(print());
     }
 
 
