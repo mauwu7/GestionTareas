@@ -7,7 +7,6 @@ import org.proyecto.pia_2.repository.*;
 import org.proyecto.pia_2.service.EmpleadorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.Iterator;
 import java.util.List;
 
@@ -21,9 +20,12 @@ public class EmpleadorServiceimpl implements EmpleadorService {
     EmpleadoRepository empleadoRepository;
 
     @Autowired
-    public EmpleadorServiceimpl(EmpleadorRepository empleadorRepository, TareaRepository tareaRepository) {
+    public EmpleadorServiceimpl(EmpleadorRepository empleadorRepository, TareaRepository tareaRepository, EquipoRepository equipoRepository, EmpleadoRepository empleadoRepository, EntornoTrabajoRepository entornoTrabajoRepository) {
         this.empleadorRepository = empleadorRepository;
         this.tareaRepository = tareaRepository;
+        this.equipoRepository = equipoRepository;
+        this.empleadoRepository = empleadoRepository;
+        this.entornoTrabajoRepository = entornoTrabajoRepository;
     }
 
     @Override
@@ -77,7 +79,6 @@ public class EmpleadorServiceimpl implements EmpleadorService {
             empleadorRepository.save(empleadorEditado);
             return empleadorEditado;
         }
-
     }
 
     @Override
@@ -213,7 +214,6 @@ public class EmpleadorServiceimpl implements EmpleadorService {
 
             empleadoRepository.save(empleado); //PROVSIONAL
             return tareaIndividual;
-
         }
         else{
             throw new UsuarioNotFoundException("No se encuentra ningun usuario registrado con el nombre: " + nombreEmpleado);
@@ -250,6 +250,7 @@ public class EmpleadorServiceimpl implements EmpleadorService {
     }
 
     @Override
+    @Transactional
     public void eliminarTarea(Long id, String nombreEmpleado) throws UsuarioNotFoundException, TareaNotFoundException {
         boolean flag = true;
         if(empleadoRepository.existsByUsername(nombreEmpleado)){
@@ -270,12 +271,8 @@ public class EmpleadorServiceimpl implements EmpleadorService {
         else {
             throw new UsuarioNotFoundException("No hay ningun usuario con el nombre: " + nombreEmpleado);
         }
-
         if(flag){
             throw new TareaNotFoundException("No hay ninguna tarea registrada con el ID: "+id);
         }
-
     }
-
-
 }
