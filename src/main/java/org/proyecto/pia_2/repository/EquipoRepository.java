@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface EquipoRepository extends JpaRepository<Equipo, Long> {
     boolean existsByNombreEquipo(String nombreEquipo);
     Equipo  findByNombreEquipo(String nombreEquipo);
+    void deleteByNombreEquipo(String nombreEquipo);
 }

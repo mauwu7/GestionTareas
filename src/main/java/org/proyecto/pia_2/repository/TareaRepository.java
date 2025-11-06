@@ -5,5 +5,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TareaRepository extends JpaRepository<TareaIndividual, Long> {
-    Boolean existsByDescripcion(String descripcion);
 }
