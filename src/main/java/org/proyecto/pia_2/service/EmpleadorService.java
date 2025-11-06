@@ -1,4 +1,5 @@
 package org.proyecto.pia_2.service;
+import org.proyecto.pia_2.DTO.TareaDTO;
 import org.proyecto.pia_2.exception.*;
 import org.proyecto.pia_2.model.*;
 
@@ -20,18 +21,24 @@ public interface EmpleadorService {
 
     List<EntornoTrabajo> obtenerEntornoTrabajos(Long id) throws  UsuarioNotFoundException; //Obtener los entornos de trabajo de un empleador
 
-    //Consultas sobre los entornos de Trabajo
+    //Consultas sobre los entornos de Trabajo-----------------------------------
     EntornoTrabajo AgregarEquipoEnEntornoDeTrabajo(Equipo equipo, String nombreEntornoDeTrabajo) throws EquipoRegistradoException, EquipoNotFoundException;
 
     EntornoTrabajo EditarEntorno(EntornoTrabajo entornoTrabajoEditado, String nombreEntornoDeTrabajo) throws  EquipoNotFoundException, EquipoRegistradoException;
 
     void EliminarEntornoDeTrabajo(String nombre) throws EquipoNotFoundException;
 
-    //Consultas sobre los Equipos
+    //Consultas sobre los Equipos-----------------------------------
     Equipo AgregarEmpleadoaEquipo(Empleado empleado, String nombreDeEquipo) throws EquipoNotFoundException, UsuarioRegistradoException;
 
-    //Consultas sobre los empleados
-    Empleado AgregarTarea(TareaIndividual tareaIndividual, String nombreEmpleado) throws UsuarioNotFoundException;
+    Equipo EditarEquipo(Equipo equipoEditado, String nombreEquipo) throws EquipoRegistradoException, EquipoNotFoundException;
 
+    void eliminarEquipo(String nombreDeEquipo) throws EquipoNotFoundException;
 
+    //Consultas sobre los empleados------------------------------------
+    TareaIndividual AgregarTarea(TareaIndividual tareaIndividual, String nombreEmpleado) throws UsuarioNotFoundException;
+
+    Empleado EditarTarea(TareaDTO tarea, Long id, String nombreEmpleado) throws  TareaNotFoundException, UsuarioNotFoundException;
+
+    void eliminarTarea(Long id, String nombreEmpleado) throws UsuarioNotFoundException, TareaNotFoundException;
 }

@@ -1,11 +1,14 @@
 package org.proyecto.pia_2.service.impl;
 import jakarta.transaction.Transactional;
+import org.proyecto.pia_2.DTO.TareaDTO;
 import org.proyecto.pia_2.exception.*;
 import org.proyecto.pia_2.model.*;
 import org.proyecto.pia_2.repository.*;
 import org.proyecto.pia_2.service.EmpleadorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -30,7 +33,10 @@ public class EmpleadorServiceimpl implements EmpleadorService {
             throw new EquipoRegistradoException("El entorno de trabajo ya se encuentra registrado");
         }
         else{
+            //----------Mantener esto-----------
             empleadorEditado.getEntornosDeTrabajo().add(entornoTrabajo);
+            entornoTrabajo.setEmpleador(empleadorEditado);
+            //------------------------------------
             empleadorRepository.save(empleadorEditado);
             return empleadorEditado;
         }
@@ -89,15 +95,13 @@ public class EmpleadorServiceimpl implements EmpleadorService {
         }
     }
 
-    //Este metodo puede eliminarse despues
+    //Este metodo puede eliminarse despues //A lo mejor estas clases deberian estar anotadas con @Transactional, igual despues se puede cambiar
     @Override
     @Transactional //Mantener la anotacion, puede cambiar despues
     public List<EntornoTrabajo> obtenerEntornoTrabajos(Long id) throws  UsuarioNotFoundException{ //Obtener los entornos de trabajo de un usauario
         Empleador empladorBuscado= empleadorRepository.findById(id).orElseThrow(()-> new UsuarioNotFoundException("No existe ningun usuario registrado con el id: "+ id));
         return empladorBuscado.getEntornosDeTrabajo();
     }
-
-    //A lo mejor estas clases deberian estar anotadas con @Transactional, igual despues se puede cambiar
 
     @Transactional
     @Override //Ver si no genera ningun error
@@ -108,7 +112,10 @@ public class EmpleadorServiceimpl implements EmpleadorService {
             }
             else{
                 EntornoTrabajo entornoTrabajo = entornoTrabajoRepository.findByNombre(nombreEntornoDeTrabajo);
+
                 entornoTrabajo.getEquiposEntornos().add(equipo);
+                equipo.setEntornoTrabajo(entornoTrabajo);
+
                 entornoTrabajoRepository.save(entornoTrabajo);
                 return entornoTrabajo;
             }
@@ -144,18 +151,21 @@ public class EmpleadorServiceimpl implements EmpleadorService {
             throw new EquipoNotFoundException("No se encuentra ningun entorno registrado con nombre: " + nombre);
         }
     }
-
+    //------------------------------------------------//
 
     @Transactional
     @Override
     public Equipo AgregarEmpleadoaEquipo(Empleado empleado, String nombreDeEquipo) throws EquipoNotFoundException, UsuarioRegistradoException {
         if(equipoRepository.existsByNombreEquipo(nombreDeEquipo)){
-            if(empleadorRepository.existsByUsername(empleado.getUsername()) || empleadorRepository.existsByEmail(empleado.getEmail())){
+            if(empleadoRepository.existsByUsername(empleado.getUsername()) || empleadoRepository.existsByEmail(empleado.getEmail())){
                 throw new UsuarioRegistradoException("Debe introducirse un email o username que no este registrado");
             }
             else{
                 Equipo equipo = equipoRepository.findByNombreEquipo(nombreDeEquipo);
+
                 equipo.getEmpleados().add(empleado);
+                empleado.setEquipo(equipo);
+
                 return equipoRepository.save(equipo);
             }
         }
@@ -164,18 +174,107 @@ public class EmpleadorServiceimpl implements EmpleadorService {
         }
     }
 
+    @Override
+    public Equipo EditarEquipo(Equipo equipoEditado, String nombreEquipo) throws EquipoRegistradoException, EquipoNotFoundException {
+        if (equipoRepository.existsByNombreEquipo(nombreEquipo)) {
+            if (equipoRepository.existsByNombreEquipo(equipoEditado.getNombreEquipo())) {
+                throw new EquipoRegistradoException("El equipo con nombre: " + equipoEditado.getNombreEquipo() + " ya se encuentra registrado");
+            } else {
+                Equipo nuevoEquipo = equipoRepository.findByNombreEquipo(nombreEquipo);
+                nuevoEquipo.setNombreEquipo(equipoEditado.getNombreEquipo());
+                return equipoRepository.save(nuevoEquipo);
+            }
+        } else {
+            throw new EquipoNotFoundException("No hay ningun equipo registrado con el nombre: " + nombreEquipo);
+        }
+    }
+
+    @Override
+    public void eliminarEquipo(String nombreDeEquipo) throws EquipoNotFoundException {
+        if(equipoRepository.existsByNombreEquipo(nombreDeEquipo)){
+            equipoRepository.deleteByNombreEquipo(nombreDeEquipo);
+        }
+        else{
+            throw new EquipoNotFoundException("No hay ningun eqipo registrado con el nombre: " + nombreDeEquipo);
+        }
+    }
+
+
+
+    //---------------------------------------------------------------------//
     @Transactional
     @Override
-    public Empleado AgregarTarea(TareaIndividual tareaIndividual, String nombreEmpleado) throws UsuarioNotFoundException {
+    public TareaIndividual AgregarTarea(TareaIndividual tareaIndividual, String nombreEmpleado) throws UsuarioNotFoundException {
         if(empleadoRepository.existsByUsername(nombreEmpleado)){
             Empleado empleado = empleadoRepository.findEmpleadosByUsername(nombreEmpleado);
+
             empleado.getTareasAsignadas().add(tareaIndividual);
-            return empleadoRepository.save(empleado);
+            tareaIndividual.setEmpleado(empleado);
+
+            empleadoRepository.save(empleado); //PROVSIONAL
+            return tareaIndividual;
 
         }
         else{
             throw new UsuarioNotFoundException("No se encuentra ningun usuario registrado con el nombre: " + nombreEmpleado);
         }
+    }
+
+    @Override
+    @Transactional //NO SE CONTEMPLA QUE SE EDITE LA DESCRIPCION, NI LAS ETIQUETAS. TAMPOCO QUE SEA OPCIONAL EDITAR O NO ALGUN CAMPO
+    public Empleado EditarTarea(TareaDTO tarea, Long id, String nombreEmpleado) throws TareaNotFoundException, UsuarioNotFoundException {
+        if(empleadoRepository.existsByUsername(nombreEmpleado)){
+            boolean flag = true;
+            Empleado empleado = empleadoRepository.findEmpleadosByUsername(nombreEmpleado);
+            List<TareaIndividual> tareasAsignadas = empleado.getTareasAsignadas();
+            for(TareaIndividual tareaAsignada : tareasAsignadas){
+                if(tareaAsignada.getTarea_id().equals(id)){
+                    tareaAsignada.setFechaVencimiento(tarea.getFechaVencimiento());
+                    tareaAsignada.setPrioridad(tarea.getPrioridad());
+                    tareaAsignada.setEstado(tarea.getEstado());
+                    flag = false;
+                    break;
+                }
+            }
+            if(flag){
+                throw new TareaNotFoundException("El empleado "+nombreEmpleado+" no tiene ningun tarea asignada con el id: "+id);
+            }
+            else{
+                empleado.setTareasAsignadas(tareasAsignadas);
+                return empleadoRepository.save(empleado);
+            }
+        }
+        else{
+            throw new UsuarioNotFoundException("No se encuentra ningun usuario registrado con el nombre: " + nombreEmpleado);
+        }
+    }
+
+    @Override
+    public void eliminarTarea(Long id, String nombreEmpleado) throws UsuarioNotFoundException, TareaNotFoundException {
+        boolean flag = true;
+        if(empleadoRepository.existsByUsername(nombreEmpleado)){
+            Empleado empleado = empleadoRepository.findEmpleadosByUsername(nombreEmpleado);
+            List<TareaIndividual>  tareas = empleado.getTareasAsignadas(); //A lo mejor habria que usar un iterador aqui
+            Iterator<TareaIndividual> iterator = tareas.iterator();
+            while(iterator.hasNext()){
+                TareaIndividual tareaAsignada = iterator.next();
+                if(tareaAsignada.getTarea_id().equals(id)){
+                    iterator.remove();
+                    flag = false;
+                    break;
+                }
+            }
+            empleado.setTareasAsignadas(tareas);
+            empleadoRepository.save(empleado);
+        }
+        else {
+            throw new UsuarioNotFoundException("No hay ningun usuario con el nombre: " + nombreEmpleado);
+        }
+
+        if(flag){
+            throw new TareaNotFoundException("No hay ninguna tarea registrada con el ID: "+id);
+        }
+
     }
 
 
