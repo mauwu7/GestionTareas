@@ -1,4 +1,4 @@
 package org.proyecto.pia_2.service;
 
-public interface IOperacionesTareas {
+public interface EmpleadoService {
 }
