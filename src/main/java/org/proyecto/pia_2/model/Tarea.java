@@ -2,11 +2,7 @@ package org.proyecto.pia_2.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import org.proyecto.pia_2.model.groups.BasicInfo;
-import org.proyecto.pia_2.model.groups.EditedInfo;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.validation.annotation.Validated;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

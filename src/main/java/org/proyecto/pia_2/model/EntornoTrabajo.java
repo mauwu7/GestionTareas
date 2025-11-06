@@ -17,7 +17,6 @@ public class EntornoTrabajo {
 
     @NotEmpty
     @Size(min = 5, max = 50)
-    @NaturalId
     private String nombre;
 
     @NotEmpty

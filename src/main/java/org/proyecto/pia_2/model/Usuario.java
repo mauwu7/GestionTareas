@@ -16,18 +16,16 @@ public abstract class Usuario {
 
     @NotEmpty
     @Size(min = 3, max = 20)
-    @NaturalId
+
     private String username;
 
 
     @NotEmpty
     @Email
-    @NaturalId
     private String email;
 
     @NotEmpty
     @Size(min = 5, max = 30)
-    @NaturalId
     private String password;
 
     public Usuario() {}

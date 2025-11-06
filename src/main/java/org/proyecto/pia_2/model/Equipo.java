@@ -14,7 +14,6 @@ public class Equipo {
     private Integer equipo_id;
 
     @NotEmpty
-    @NaturalId
     private String nombreEquipo;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -70,7 +69,5 @@ public class Equipo {
     public void setNombreEquipo(String nombreEquipo) {
         this.nombreEquipo = nombreEquipo;
     }
-
-
 
 }
