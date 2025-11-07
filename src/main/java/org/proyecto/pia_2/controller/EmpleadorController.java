@@ -26,7 +26,7 @@ public class EmpleadorController {
         return new ResponseEntity<Empleador>(empleador, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id:\\d+}")
     ResponseEntity<Empleador> buscarEmpleadorPorId(@PathVariable Long id){
         Optional<Empleador> empleador = empleadorRepository.findById(id);
         return empleador.map(ResponseEntity::ok).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
