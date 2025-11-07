@@ -17,12 +17,10 @@ public class EntornoTrabajo {
 
     @NotEmpty
     @Size(min = 7, max = 30)
-    @NaturalId
     private String nombre;
 
     @NotEmpty
     @Size(min = 7, max = 30)
-    @NaturalId
     private String descripcion;
 
     @ManyToOne(fetch = FetchType.LAZY)

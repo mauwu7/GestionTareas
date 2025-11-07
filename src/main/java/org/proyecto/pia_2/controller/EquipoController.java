@@ -11,8 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
+@RequestMapping("/equipos")
 public class EquipoController {
     private final EquipoRepository equipoRepository;
 
@@ -23,6 +25,12 @@ public class EquipoController {
     public ResponseEntity<Equipo> addEquipo(@RequestBody Equipo equipo){
         equipoRepository.save(equipo);
         return new ResponseEntity<>(equipo, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    ResponseEntity<Equipo> buscarEquipoPorId(@PathVariable Long id){
+        Optional<Equipo> equipo = equipoRepository.findById(id);
+        return equipo.map(ResponseEntity::ok).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/deleteEquipo/{id}")

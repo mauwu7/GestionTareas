@@ -9,8 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
+@RequestMapping("/empleados")
 public class EmpleadoController {
     private final EmpleadoRepository empleadoRepository;
 
@@ -23,6 +25,12 @@ public class EmpleadoController {
     ResponseEntity<Empleado> guardarEmpleado(@RequestBody Empleado empleado) {
         empleadoRepository.save(empleado);
         return new ResponseEntity<Empleado>(empleado, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    ResponseEntity<Empleado> buscarEmpleadoPorId(@PathVariable Long id){
+        Optional<Empleado> empleado = empleadoRepository.findById(id);
+        return empleado.map(ResponseEntity::ok).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/deleteEmpleado/{id}")
