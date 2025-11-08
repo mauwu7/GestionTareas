@@ -36,7 +36,7 @@ public abstract class Tarea {
     //@NotNull(groups = EditedInfo.class)
     @Min(1)
     @NotNull
-    private Integer prioridad;
+    private Integer prioridad;  //Mientras sea mayor el numero mayor sera su prioridad,
 
     //@NotNull(groups = BasicInfo.class)
     //@NotNull(groups = EditedInfo.class)

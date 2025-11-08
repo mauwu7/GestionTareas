@@ -1,4 +1,6 @@
 package org.proyecto.pia_2.model;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,12 +12,14 @@ public class Empleado extends  Usuario{
     private boolean privilegiosAdministrador;
 
     @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<TareaIndividual> tareasAsignadas = new ArrayList<>();
 
     @ElementCollection
     private List<String> notificaciones = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     private Equipo equipo;
 
     //Manejar por separado el modo en que se ingresaran los equipos. Por otra parte, mantener el constructor en la clase abstracta

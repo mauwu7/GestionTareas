@@ -1,8 +1,8 @@
 package org.proyecto.pia_2.model;
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import org.hibernate.annotations.NaturalId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +17,11 @@ public class Equipo {
     private String nombreEquipo;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     private EntornoTrabajo entornoTrabajo;
 
     @OneToMany(mappedBy = "equipo", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Empleado> empleados = new ArrayList<>();
 
     /*

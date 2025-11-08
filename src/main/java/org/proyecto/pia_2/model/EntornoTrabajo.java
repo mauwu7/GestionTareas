@@ -1,9 +1,9 @@
 package org.proyecto.pia_2.model;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import org.hibernate.annotations.NaturalId;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -24,10 +24,12 @@ public class EntornoTrabajo {
     private String descripcion;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     private Empleador empleador;
 
 
     @OneToMany(mappedBy = "entornoTrabajo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Equipo> equiposEntornos = new ArrayList<>();
 
     public EntornoTrabajo() {}
@@ -38,7 +40,7 @@ public class EntornoTrabajo {
         this.empleador = empleador;
     }
 
-    public EntornoTrabajo(String nombre, String descripcion){ /// Se añade nuevo constructor
+    public EntornoTrabajo(String nombre, String descripcion){ // Se añade nuevo constructor
         this.nombre = nombre;
         this.descripcion = descripcion;
     }

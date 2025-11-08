@@ -1,4 +1,5 @@
 package org.proyecto.pia_2.model;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -7,6 +8,7 @@ import java.time.LocalDate;
 public class TareaIndividual extends Tarea{
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     private Empleado empleado;
 
     public TareaIndividual(String descripcion, LocalDate fechaCreacion, LocalDate fechaVencimiento, Integer prioridad, String estado){

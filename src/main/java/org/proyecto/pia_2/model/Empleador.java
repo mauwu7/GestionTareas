@@ -1,4 +1,5 @@
 package org.proyecto.pia_2.model;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,6 +11,7 @@ import java.util.List;
 public class Empleador extends Usuario{
 
     @OneToMany(mappedBy = "empleador", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<EntornoTrabajo> entornosDeTrabajo = new ArrayList<>();
 
     public Empleador() {}
