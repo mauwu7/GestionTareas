@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 public interface EntornoTrabajoRepository extends JpaRepository<EntornoTrabajo,Long> {
     boolean existsByNombre(String nombre);
     EntornoTrabajo findByNombre(String nombre);
+    void deleteByNombre(String nombre);
 }
