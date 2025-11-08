@@ -38,7 +38,4 @@ public interface EmpleadorService {
     //Consultas sobre los empleados------------------------------------
     TareaIndividual AgregarTarea(TareaIndividual tareaIndividual, String nombreEmpleado) throws UsuarioNotFoundException;
 
-    Empleado EditarTarea(TareaDTO tarea, Long id, String nombreEmpleado) throws  TareaNotFoundException, UsuarioNotFoundException;
-
-    void eliminarTarea(Long id, String nombreEmpleado) throws UsuarioNotFoundException, TareaNotFoundException;
 }
