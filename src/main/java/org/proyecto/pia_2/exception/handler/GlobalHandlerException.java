@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,14 @@ import java.util.List;
 //Ver si se puede agrupar despues
 @RestControllerAdvice
 public class GlobalHandlerException {
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorHandlerResponse handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex){
+        List<ErrorResponse> list = new ArrayList<>();
+        list.add(new ErrorResponse(ex.getName(),ex.getMessage()));
+        return new ErrorHandlerResponse(HttpStatus.BAD_REQUEST.value(),list);
+    }
 
     @ExceptionHandler(TareaNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
