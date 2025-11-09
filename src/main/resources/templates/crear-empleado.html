@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Nuevo Empleado</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .header-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .form-card {
+            border-left: 4px solid #28a745;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .empleados-card {
+            border-left: 4px solid #007bff;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn-submit {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            color: white;
+        }
+        .empleado-item {
+            border-bottom: 1px solid #e9ecef;
+            padding: 1rem 0;
+        }
+        .empleado-item:last-child {
+            border-bottom: none;
+        }
+        .badge-empleado {
+            background-color: #e9ecef;
+            color: #495057;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid py-4">
+    <div class="header-gradient">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="display-5 fw-bold">
+                    <i class="fas fa-user-plus me-2"></i>Crear Nuevo Empleado
+                </h1>
+                <p class="lead mb-0">Equipo: <strong th:text="${equipoNombre}"></strong></p>
+                <p class="mb-0">Entorno: <strong th:text="${entornoNombre}"></strong></p>
+            </div>
+            <div class="col-md-4 text-end">
+                <a th:href="@{'/entornosTrabajo/editar/' + ${entornoId}}" class="btn btn-light btn-lg">
+                    <i class="fas fa-arrow-left me-2"></i>Volver al Entorno
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mensajes -->
+    <div th:if="${param.success}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        <span th:if="${param.success == 'empleado_creado'}">Empleado creado exitosamente</span>
+        <span th:if="${param.success == 'empleado_eliminado'}">Empleado eliminado exitosamente</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        <span th:if="${param.error == 'error_crear_empleado'}">Error al crear el empleado</span>
+        <span th:if="${param.error == 'username_duplicado'}">El nombre de usuario ya está en uso</span>
+        <span th:if="${param.error == 'email_duplicado'}">El email ya está registrado</span>
+        <span th:if="${param.error == 'equipo_no_encontrado'}">Equipo no encontrado</span>
+        <span th:if="${param.error == 'error_eliminar_empleado'}">Error al eliminar el empleado</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="row">
+        <!-- Columna para crear empleado -->
+        <div class="col-lg-6 mb-4">
+            <div class="card form-card h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-user-plus me-2"></i>Crear Nuevo Empleado
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{'/entornosTrabajo/equipos/crear-empleado/' + ${equipoId}}" method="post">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Nombre de Usuario *</label>
+                            <input type="text" class="form-control" id="username" name="username"
+                                   required placeholder="ejemplo.usuario">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Contraseña *</label>
+                            <input type="password" class="form-control" id="password" name="password"
+                                   required placeholder="Ingrese la contraseña">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Correo Electrónico *</label>
+                            <input type="email" class="form-control" id="email" name="email"
+                                   required placeholder="ejemplo@empresa.com">
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a th:href="@{'/entornosTrabajo/editar/' + ${entornoId}}" class="btn btn-secondary">
+                                <i class="fas fa-times me-2"></i>Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-submit">
+                                <i class="fas fa-user-plus me-2"></i>Crear Empleado
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Columna para lista de empleados -->
+        <div class="col-lg-6 mb-4">
+            <div class="card empleados-card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-users me-2"></i>Empleados del Equipo
+                        <span class="badge bg-light text-dark ms-2"
+                              th:text="${empleados != null ? #lists.size(empleados) : 0}">0</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+
+                    <div th:if="${empleados != null and !#lists.isEmpty(empleados)}">
+                        <div th:each="empleado : ${empleados}" class="empleado-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1" th:text="${empleado.username}">Nombre de Usuario</h6>
+                                    <p class="mb-1 text-muted small" th:text="${empleado.email}">email@ejemplo.com</p>
+                                    <div class="mt-2">
+                                        <span class="badge badge-empleado me-1">
+                                            <i class="fas fa-id-card me-1"></i>
+                                            ID: <span th:text="${empleado.usuario_id}"></span>
+                                        </span>
+
+                                    </div>
+                                </div>
+                                <div class="ms-3">
+                                    <form th:action="@{/entornosTrabajo/equipos/eliminar-empleado/{equipoId}/{empleadoId}(equipoId=${equipoId}, empleadoId=${empleado.usuario_id})}"
+                                          method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                onclick="return confirm('¿Estás seguro de eliminar este empleado?')"
+                                                title="Eliminar empleado">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

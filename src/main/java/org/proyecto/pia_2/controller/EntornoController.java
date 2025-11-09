@@ -2,6 +2,7 @@ package org.proyecto.pia_2.controller;
 
 import org.proyecto.pia_2.model.*;
 import org.proyecto.pia_2.repository.EntornoTrabajoRepository;
+import org.proyecto.pia_2.service.EntornoServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,13 +14,16 @@ import java.util.Optional;
 @RequestMapping("/entornosTrabajo")
 public class EntornoController {
     private final EntornoTrabajoRepository entornoRepository;
+    @Autowired
+    private final EntornoServicio entornoServicio;
 
     @Autowired
-    public EntornoController(EntornoTrabajoRepository entornoRepository) {
+    public EntornoController(EntornoTrabajoRepository entornoRepository, EntornoServicio entornoServicio) {
         this.entornoRepository = entornoRepository;
+        this.entornoServicio = entornoServicio;
     }
 
-    @PostMapping("/addEntorno")
+    /*@PostMapping("/addEntorno")
     public ResponseEntity<EntornoTrabajo> addEntorno(@RequestBody EntornoTrabajo entorno){
         entornoRepository.save(entorno);
         return new ResponseEntity<>(entorno, HttpStatus.CREATED);
@@ -60,6 +64,8 @@ public class EntornoController {
         entornoRepository.save(entornoEdit);
 
         return new ResponseEntity<>(entornoEdit,HttpStatus.OK);
-    }
+    }*/
+
+
 
 }

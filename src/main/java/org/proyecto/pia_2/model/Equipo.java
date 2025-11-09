@@ -30,6 +30,8 @@ public class Equipo {
      */
     public Equipo(String nombreEquipo) {setNombreEquipo(nombreEquipo);}
 
+    public Equipo() {}
+
     public Long getEquipo_id() {
         return equipo_id;
     }

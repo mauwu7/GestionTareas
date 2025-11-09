@@ -31,6 +31,13 @@ public class Empleado extends  Usuario{
 
     public Empleado() {}
 
+    public void setEquipo(Equipo equipo) {
+        this.equipo = equipo;
+    }
+    public Equipo getEquipo() {
+        return equipo;
+    }
+
     /*public void setEmpleado_id(Long empleado_id) {this.empleado_id = empleado_id;}
     public Long getEquipo_id() {return this.empleado_id;}*/
 
@@ -57,6 +64,5 @@ public class Empleado extends  Usuario{
     public void setTareasAsignadas(List<TareaIndividual> tareasAsignadas) {
         this.tareasAsignadas = tareasAsignadas;
     }
-
 
 }

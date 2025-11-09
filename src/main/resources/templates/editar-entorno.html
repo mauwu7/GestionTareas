@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionar Entorno</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajaxlers/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .entorno-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .equipo-card {
+            border-left: 4px solid #28a745;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        .equipo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .action-btn {
+            transition: all 0.3s ease;
+        }
+        .action-btn:hover {
+            transform: scale(1.05);
+        }
+        .empleado-badge {
+            background-color: #e9ecef;
+            border: 1px solid #dee2e6;
+            border-radius: 15px;
+            padding: 5px 10px;
+            margin: 2px;
+            font-size: 0.85rem;
+        }
+        .modal-header-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-group-vertical form {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid py-4">
+    <!-- Header del Entorno -->
+    <div class="entorno-header">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="display-5 fw-bold" th:text="${entorno.nombre}">Nombre del Entorno</h1>
+                <p class="lead mb-0" th:text="${entorno.descripcion} ?: 'Sin descripción'">Descripción del entorno</p>
+                <div class="mt-2">
+                    <span class="badge bg-light text-dark">
+                        <i class="fas fa-id-card me-1"></i>
+                        ID: <span th:text="${entorno.entorno_id}">123</span>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-4 text-end">
+                <button class="btn btn-light btn-lg action-btn me-2" data-bs-toggle="modal" data-bs-target="#modalEditarEntorno">
+                    <i class="fas fa-edit me-2"></i>Editar Entorno
+                </button>
+                <a th:href="@{/}" class="btn btn-outline-light btn-lg action-btn">
+                    <i class="fas fa-arrow-left me-2"></i>Volver
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mensajes -->
+    <div th:if="${param.success}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        <span th:if="${param.success == 'entorno_actualizado'}">Entorno actualizado exitosamente</span>
+        <span th:if="${param.success == 'equipo_creado'}">Equipo creado exitosamente</span>
+        <span th:if="${param.success == 'equipo_eliminado'}">Equipo eliminado exitosamente</span>
+        <span th:if="${param.success == 'empleado_creado'}">Empleado creado exitosamente</span>
+        <span th:if="${param.success == 'empleado_eliminado'}">Empleado eliminado exitosamente</span>
+        <span th:if="${param.success != 'entorno_actualizado' and param.success != 'equipo_creado' and param.success != 'equipo_eliminado' and param.success != 'empleado_creado' and param.success != 'empleado_eliminado'}">Operación completada exitosamente</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        <span th:if="${param.error == 'error_actualizar'}">Error al actualizar el entorno</span>
+        <span th:if="${param.error == 'error_crear_equipo'}">Error al crear el equipo</span>
+        <span th:if="${param.error == 'error_eliminar_equipo'}">Error al eliminar el equipo</span>
+        <span th:if="${param.error == 'error_crear_empleado'}">Error al crear el empleado</span>
+        <span th:if="${param.error == 'username_duplicado'}">El nombre de usuario ya está en uso</span>
+        <span th:if="${param.error == 'email_duplicado'}">El email ya está registrado</span>
+        <span th:if="${param.error == 'equipo_no_encontrado'}">Equipo no encontrado</span>
+        <span th:if="${param.error != 'error_actualizar' and param.error != 'error_crear_equipo' and param.error != 'error_eliminar_equipo' and param.error != 'error_crear_empleado' and param.error != 'username_duplicado' and param.error != 'email_duplicado' and param.error != 'equipo_no_encontrado'}">Error en la operación</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Gestión de Equipos -->
+    <div class="row">
+        <!-- Panel de Acciones Rápidas -->
+        <div class="col-lg-4 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-rocket me-2"></i>Acciones
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-success w-100 mb-3 action-btn" data-bs-toggle="modal" data-bs-target="#modalCrearEquipo">
+                        <i class="fas fa-plus-circle me-2"></i>Crear Nuevo Equipo
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Equipos -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-users me-2"></i>Equipos del Entorno
+                        <span class="badge bg-light text-dark ms-2" th:text="${entorno.equiposEntornos != null ? #lists.size(entorno.equiposEntornos) : 0}">0</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <!-- Mensaje cuando no hay equipos -->
+                    <div th:if="${entorno.equiposEntornos == null or #lists.isEmpty(entorno.equiposEntornos)}" class="text-center py-4">
+                        <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No hay equipos creados</h5>
+                        <p class="text-muted">Crea tu primer equipo usando el botón "Crear Nuevo Equipo".</p>
+                    </div>
+
+                    <div th:if="${entorno.equiposEntornos != null and !#lists.isEmpty(entorno.equiposEntornos)}" class="row">
+                        <div th:each="equipo : ${entorno.equiposEntornos}" class="col-md-6 mb-4">
+                            <div class="card equipo-card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <h5 class="card-title" th:text="${equipo.nombreEquipo}">Nombre del Equipo</h5>
+                                        <div class="btn-group-vertical">
+                                            <!-- CAMBIADO: Botón para editar equipo (era crear empleado) -->
+                                            <a th:href="@{/equipos/editar/{id}(id=${equipo.equipo_id})}"
+                                               class="btn btn-sm btn-outline-primary mb-1">
+                                                <i class="fas fa-edit me-1"></i>Editar Equipo
+                                            </a>
+
+                                            <!-- Botón para crear empleado -->
+                                            <a th:href="@{/entornosTrabajo/equipos/crear-empleado/{id}(id=${equipo.equipo_id})}"
+                                               class="btn btn-sm btn-outline-success mb-1">
+                                                <i class="fas fa-user-plus me-1"></i>Crear Empleado
+                                            </a>
+
+                                            <!-- Formulario para eliminar equipo -->
+                                            <form th:action="@{/entornosTrabajo/eliminar-equipo/{entornoId}/{equipoId}(entornoId=${entorno.entorno_id}, equipoId=${equipo.equipo_id})}"
+                                                  method="post">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                        onclick="return confirm('¿Estás seguro de eliminar este equipo? Esta acción no se puede deshacer.')">
+                                                    <i class="fas fa-trash me-1"></i>Eliminar
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-3 pt-3 border-top">
+                                        <small class="text-muted">
+                                            <i class="fas fa-id-card me-1"></i>
+                                            ID: <span th:text="${equipo.equipo_id}">123</span>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Los modales se mantienen igual -->
+<!-- Modal Editar Entorno -->
+<div class="modal fade" id="modalEditarEntorno" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header modal-header-gradient">
+                <h5 class="modal-title">
+                    <i class="fas fa-edit me-2"></i>Editar Entorno
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/entornosTrabajo/editar/{id}(id=${entorno.entorno_id})}" method="post">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre del Entorno *</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre"
+                               th:value="${entorno.nombre}" required
+                               placeholder="Ej: Desarrollo Frontend, Backend API, etc.">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="descripcion" name="descripcion"
+                                  rows="4" placeholder="Describe el propósito de este entorno..."
+                                  th:text="${entorno.descripcion}"></textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i>Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-2"></i>Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Crear Equipo -->
+<div class="modal fade" id="modalCrearEquipo" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-plus-circle me-2"></i>Crear Nuevo Equipo
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/entornosTrabajo/crear-equipo/{id}(id=${entorno.entorno_id})}" method="post">
+                    <div class="mb-3">
+                        <label for="nombreEquipo" class="form-label">Nombre del Equipo *</label>
+                        <input type="text" class="form-control" id="nombreEquipo" name="nombre"
+                               required placeholder="Ej: Equipo Frontend, Backend Team, etc.">
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i>Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-plus me-2"></i>Crear Equipo
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
