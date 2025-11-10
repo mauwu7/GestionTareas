@@ -26,7 +26,7 @@ public class EquipoController {
     }
 
     @GetMapping("/consultarEmpleados/{idEquipo}")
-    ResponseEntity<List<Empleado>> ConsultarEquipos(@PathVariable @Min(1) @NotNull Long idEquipo) throws EquipoNotFoundException {
+    ResponseEntity<List<Empleado>> ConsultarEmpleados(@PathVariable @Min(1) @NotNull Long idEquipo) throws EquipoNotFoundException {
         return new ResponseEntity<>(equipoService.ConsultarEmpleadosEnEquipo(idEquipo), HttpStatus.FOUND);
     }
 
