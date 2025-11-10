@@ -9,9 +9,10 @@ public interface TareaService {
 
     TareaIndividual AgregarTarea(TareaIndividual tarea, String nombreEmpleado) throws UsuarioNotFoundException;
 
-    TareaIndividual EditarPrioridadTarea(Long id, Integer prioridad, String nombreEmpleado) throws UsuarioNotFoundException;
+    void EditarPrioridadTarea(Long id, Integer prioridad, String nombreEmpleado) throws UsuarioNotFoundException, TareaNotFoundException;
 
-    TareaIndividual EditarFechaVencimiento(Long id, LocalDate fechaVencimiento, String nombreEmpleado) throws UsuarioNotFoundException;
+    void EditarFechaVencimiento(Long id, LocalDate fechaVencimiento, String nombreEmpleado) throws UsuarioNotFoundException, TareaNotFoundException;
 
     void FinalizarTarea(Long id, String nombreEmpleado) throws UsuarioNotFoundException, TareaNotFoundException;
+
 }

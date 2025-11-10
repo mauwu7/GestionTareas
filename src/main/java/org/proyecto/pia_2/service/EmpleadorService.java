@@ -1,8 +1,8 @@
 package org.proyecto.pia_2.service;
-import org.proyecto.pia_2.DTO.TareaDTO;
 import org.proyecto.pia_2.exception.*;
 import org.proyecto.pia_2.model.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface EmpleadorService {
@@ -35,7 +35,12 @@ public interface EmpleadorService {
 
     void eliminarEquipo(String nombreDeEquipo) throws EquipoNotFoundException;
 
-    //Consultas sobre los empleados------------------------------------
+    //Consultas sobre los empleados y tareas
     TareaIndividual AgregarTarea(TareaIndividual tareaIndividual, String nombreEmpleado) throws UsuarioNotFoundException;
 
+    void editarPrioridadTarea(Long idTarea, Integer prioridad, String nombreEmpleado) throws UsuarioNotFoundException, TareaNotFoundException;
+
+    void editarfechaVencimiento(Long idTarea, LocalDate fechaVencimiento, String nombreEmpleado) throws UsuarioNotFoundException,  TareaNotFoundException;
+
+    void EliminarTarea(Long idTarea, String nombreEmpleado) throws UsuarioNotFoundException, TareaNotFoundException;
 }

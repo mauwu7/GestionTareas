@@ -12,5 +12,5 @@ public interface EmpleadoService {
 
     Empleado ConsultarInformacion(Long idEmpleado) throws UsuarioNotFoundException;
 
-    void completarTarea(Long idEmpleado, Long idTarea) throws UsuarioNotFoundException, TareaNotFoundException;
+    void completarTarea(String nombreEmpleado, Long idTarea) throws UsuarioNotFoundException, TareaNotFoundException;
 }

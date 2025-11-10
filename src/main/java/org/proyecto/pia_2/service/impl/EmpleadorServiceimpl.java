@@ -1,30 +1,26 @@
 package org.proyecto.pia_2.service.impl;
 import jakarta.transaction.Transactional;
-import org.proyecto.pia_2.DTO.TareaDTO;
 import org.proyecto.pia_2.exception.*;
 import org.proyecto.pia_2.model.*;
 import org.proyecto.pia_2.repository.*;
 import org.proyecto.pia_2.service.EmpleadorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.Iterator;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public class EmpleadorServiceimpl implements EmpleadorService {
 
-    TareaRepository tareaRepository;
     private final EmpleadorRepository empleadorRepository;
-    EmpleadoRepository empleadoRepository;
     private final EntornoTrabajoServiceImpl entornoTrabajoService;
     private final EquipoServiceImpl equipoService;
     private final TareaServiceImpl tareaService;
 
     @Autowired
-    public EmpleadorServiceimpl(EmpleadorRepository empleadorRepository,EquipoServiceImpl equipoService, TareaRepository tareaRepository, EmpleadoRepository empleadoRepository, EntornoTrabajoServiceImpl entornoTrabajoService, TareaServiceImpl tareaService) {
+    public EmpleadorServiceimpl(EmpleadorRepository empleadorRepository,EquipoServiceImpl equipoService, EntornoTrabajoServiceImpl entornoTrabajoService, TareaServiceImpl tareaService) {
         this.empleadorRepository = empleadorRepository;
-        this.tareaRepository = tareaRepository;
-        this.empleadoRepository = empleadoRepository;
         this.entornoTrabajoService = entornoTrabajoService;
         this.equipoService = equipoService;
         this.tareaService = tareaService;
@@ -138,5 +134,21 @@ public class EmpleadorServiceimpl implements EmpleadorService {
     public TareaIndividual AgregarTarea(TareaIndividual tareaIndividual, String nombreEmpleado) throws UsuarioNotFoundException {
         return tareaService.AgregarTarea(tareaIndividual, nombreEmpleado);
     }
+
+    @Override
+    public void editarPrioridadTarea(Long idTarea, Integer prioridad, String nombreEmpleado) throws UsuarioNotFoundException, TareaNotFoundException {
+        tareaService.EditarPrioridadTarea(idTarea, prioridad, nombreEmpleado);
+    }
+
+    @Override
+    public void editarfechaVencimiento(Long idTarea, LocalDate fechaVencimiento, String nombreEmpleado) throws UsuarioNotFoundException, TareaNotFoundException {
+        tareaService.EditarFechaVencimiento(idTarea, fechaVencimiento, nombreEmpleado);
+    }
+
+    @Override
+    public void EliminarTarea(Long idTarea, String nombreEmpleado) throws UsuarioNotFoundException, TareaNotFoundException {
+        tareaService.FinalizarTarea(idTarea, nombreEmpleado);
+    }
+
 
 }
