@@ -1,7 +1,6 @@
 package org.proyecto.pia_2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.proyecto.pia_2.DTO.TareaDTO;
 import org.proyecto.pia_2.controller.EmpleadorController;
 import org.proyecto.pia_2.exception.EquipoNotFoundException;
 import org.proyecto.pia_2.exception.EquipoRegistradoException;
@@ -209,7 +208,7 @@ public class EmpleadorControllerTest {
 
         Empleado empleado = new Empleado("ajsjaj","jajja@gmail.com","jasssa22");
 
-        when(empleadorService.EditarTarea(any(TareaDTO.class),eq(1L),anyString())).thenReturn(empleado);
+        //when(empleadorService.EditarTarea(any(TareaDTO.class),eq(1L),anyString())).thenReturn(empleado);
 
 
         mockMvc.perform(MockMvcRequestBuilders.put("/editarTarea/{idTarea}/{nombreEmpleado}",1L,"Javier")
