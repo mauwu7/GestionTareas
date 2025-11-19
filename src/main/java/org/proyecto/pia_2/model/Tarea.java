@@ -1,12 +1,15 @@
 package org.proyecto.pia_2.model;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 
-
+//Puede que haya que implementar validacion por grupos
 @MappedSuperclass
 public abstract class Tarea {
 
@@ -18,18 +21,24 @@ public abstract class Tarea {
     private String descripcion;
 
     @NotNull
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate fechaVencimiento;
 
     @NotNull
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate fechaCreacion;
 
-    @NotNull
-    private Integer prioridad;
 
+    @Min(1)
+    @Max(3)
     @NotNull
+    private Integer prioridad;  //1,2,3. La prioridad es orden descendente
+
+
     private String estado; // PENDIENTE, EN_PROGRESO, COMPLETADA
 
-    @ElementCollection //Administracion, contabilidad, etc.
+    @ElementCollection //Administracion, contabilidad etc
+
     private List<String> etiquetas = new ArrayList<>();
 
     /*
@@ -39,17 +48,6 @@ public abstract class Tarea {
 
     public Tarea(){}
 
-    /*
-    public Tarea(String descripcion, LocalDate fechaVencimiento, LocalDate fechaCreacion, Integer prioridad, String estado, List<String> etiquetas) {
-        this.tarea_id = tarea_id;
-        this.descripcion = descripcion;
-        this.fechaVencimiento = fechaVencimiento;
-        this.fechaCreacion = fechaCreacion;
-        this.prioridad = prioridad;
-        this.estado = estado;
-        this.etiquetas = etiquetas;
-    }
-     */
     public Long getTarea_id() {
         return tarea_id;
     }
@@ -105,8 +103,5 @@ public abstract class Tarea {
     public void setEtiquetas(List<String> etiquetas) {
         this.etiquetas = etiquetas;
     }
-
-    //Se maneja en los servicios
-    // void mostrarTarea(){};
 
 }
