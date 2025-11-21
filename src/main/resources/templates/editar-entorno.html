@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestionar Entorno</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajaxlers/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         .entorno-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -44,6 +44,10 @@
         .btn-group-vertical form {
             margin-bottom: 5px;
         }
+        .modal-header-warning {
+            background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -77,10 +81,11 @@
         <i class="fas fa-check-circle me-2"></i>
         <span th:if="${param.success == 'entorno_actualizado'}">Entorno actualizado exitosamente</span>
         <span th:if="${param.success == 'equipo_creado'}">Equipo creado exitosamente</span>
+        <span th:if="${param.success == 'equipo_actualizado'}">Equipo actualizado exitosamente</span>
         <span th:if="${param.success == 'equipo_eliminado'}">Equipo eliminado exitosamente</span>
         <span th:if="${param.success == 'empleado_creado'}">Empleado creado exitosamente</span>
         <span th:if="${param.success == 'empleado_eliminado'}">Empleado eliminado exitosamente</span>
-        <span th:if="${param.success != 'entorno_actualizado' and param.success != 'equipo_creado' and param.success != 'equipo_eliminado' and param.success != 'empleado_creado' and param.success != 'empleado_eliminado'}">Operación completada exitosamente</span>
+        <span th:if="${param.success != 'entorno_actualizado' and param.success != 'equipo_creado' and param.success != 'equipo_actualizado' and param.success != 'equipo_eliminado' and param.success != 'empleado_creado' and param.success != 'empleado_eliminado'}">Operación completada exitosamente</span>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 
@@ -88,18 +93,17 @@
         <i class="fas fa-exclamation-circle me-2"></i>
         <span th:if="${param.error == 'error_actualizar'}">Error al actualizar el entorno</span>
         <span th:if="${param.error == 'error_crear_equipo'}">Error al crear el equipo</span>
+        <span th:if="${param.error == 'error_actualizar_equipo'}">Error al actualizar el equipo</span>
         <span th:if="${param.error == 'error_eliminar_equipo'}">Error al eliminar el equipo</span>
         <span th:if="${param.error == 'error_crear_empleado'}">Error al crear el empleado</span>
         <span th:if="${param.error == 'username_duplicado'}">El nombre de usuario ya está en uso</span>
         <span th:if="${param.error == 'email_duplicado'}">El email ya está registrado</span>
         <span th:if="${param.error == 'equipo_no_encontrado'}">Equipo no encontrado</span>
-        <span th:if="${param.error != 'error_actualizar' and param.error != 'error_crear_equipo' and param.error != 'error_eliminar_equipo' and param.error != 'error_crear_empleado' and param.error != 'username_duplicado' and param.error != 'email_duplicado' and param.error != 'equipo_no_encontrado'}">Error en la operación</span>
+        <span th:if="${param.error != 'error_actualizar' and param.error != 'error_crear_equipo' and param.error != 'error_actualizar_equipo' and param.error != 'error_eliminar_equipo' and param.error != 'error_crear_empleado' and param.error != 'username_duplicado' and param.error != 'email_duplicado' and param.error != 'equipo_no_encontrado'}">Error en la operación</span>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 
-    <!-- Gestión de Equipos -->
     <div class="row">
-        <!-- Panel de Acciones Rápidas -->
         <div class="col-lg-4 mb-4">
             <div class="card">
                 <div class="card-header bg-primary text-white">
@@ -115,7 +119,6 @@
             </div>
         </div>
 
-        <!-- Lista de Equipos -->
         <div class="col-lg-8">
             <div class="card">
                 <div class="card-header bg-dark text-white">
@@ -125,7 +128,6 @@
                     </h5>
                 </div>
                 <div class="card-body">
-                    <!-- Mensaje cuando no hay equipos -->
                     <div th:if="${entorno.equiposEntornos == null or #lists.isEmpty(entorno.equiposEntornos)}" class="text-center py-4">
                         <i class="fas fa-users fa-3x text-muted mb-3"></i>
                         <h5 class="text-muted">No hay equipos creados</h5>
@@ -139,19 +141,19 @@
                                     <div class="d-flex justify-content-between align-items-start mb-3">
                                         <h5 class="card-title" th:text="${equipo.nombreEquipo}">Nombre del Equipo</h5>
                                         <div class="btn-group-vertical">
-                                            <!-- CAMBIADO: Botón para editar equipo (era crear empleado) -->
-                                            <a th:href="@{/equipos/editar/{id}(id=${equipo.equipo_id})}"
-                                               class="btn btn-sm btn-outline-primary mb-1">
+                                            <button class="btn btn-sm btn-outline-primary mb-1"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalEditarEquipo"
+                                                    th:data-equipo-id="${equipo.equipo_id}"
+                                                    th:data-equipo-nombre="${equipo.nombreEquipo}">
                                                 <i class="fas fa-edit me-1"></i>Editar Equipo
-                                            </a>
+                                            </button>
 
-                                            <!-- Botón para crear empleado -->
                                             <a th:href="@{/entornosTrabajo/equipos/crear-empleado/{id}(id=${equipo.equipo_id})}"
                                                class="btn btn-sm btn-outline-success mb-1">
                                                 <i class="fas fa-user-plus me-1"></i>Crear Empleado
                                             </a>
 
-                                            <!-- Formulario para eliminar equipo -->
                                             <form th:action="@{/entornosTrabajo/eliminar-equipo/{entornoId}/{equipoId}(entornoId=${entorno.entorno_id}, equipoId=${equipo.equipo_id})}"
                                                   method="post">
                                                 <button type="submit" class="btn btn-sm btn-outline-danger"
@@ -178,7 +180,6 @@
     </div>
 </div>
 
-<!-- Los modales se mantienen igual -->
 <!-- Modal Editar Entorno -->
 <div class="modal fade" id="modalEditarEntorno" tabindex="-1">
     <div class="modal-dialog modal-lg">
@@ -251,6 +252,63 @@
     </div>
 </div>
 
+<div class="modal fade" id="modalEditarEquipo" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-header-warning">
+                <h5 class="modal-title">
+                    <i class="fas fa-edit me-2"></i>Editar Equipo
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formEditarEquipo" method="post">
+                    <div class="mb-3">
+                        <label for="nombreEquipoEdit" class="form-label">Nombre del Equipo *</label>
+                        <input type="text" class="form-control" id="nombreEquipoEdit" name="nombre"
+                               required placeholder="Ej: Equipo Frontend, Backend Team, etc.">
+                        <input type="hidden" id="equipoId" name="equipoId">
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i>Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-warning text-white">
+                            <i class="fas fa-save me-2"></i>Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const modalEditarEquipo = document.getElementById('modalEditarEquipo');
+        const formEditarEquipo = document.getElementById('formEditarEquipo');
+        const nombreEquipoEdit = document.getElementById('nombreEquipoEdit');
+        const equipoIdInput = document.getElementById('equipoId');
+
+        modalEditarEquipo.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const equipoId = button.getAttribute('data-equipo-id');
+            const equipoNombre = button.getAttribute('data-equipo-nombre');
+
+            nombreEquipoEdit.value = equipoNombre;
+            equipoIdInput.value = equipoId;
+
+            formEditarEquipo.action = `/entornosTrabajo/equipo-editar/${equipoId}`;
+        });
+
+        // Limpiar el formulario cuando se cierra el modal
+        modalEditarEquipo.addEventListener('hidden.bs.modal', function() {
+            nombreEquipoEdit.value = '';
+            equipoIdInput.value = '';
+        });
+    });
+</script>
 </body>
 </html>

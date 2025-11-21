@@ -16,15 +16,4 @@ public class Pia2Application  {
     public static void main(String[] args) {
         SpringApplication.run(Pia2Application.class, args);
     }
-    @Autowired
-    private EmpleadorRepository empleadorRepository;
-
-    public void run (String... args) throws Exception {
-        Empleador empleador = new Empleador("Manuel", "ejemplo@gmail.com" ,"12345");
-        empleadorRepository.save(empleador);
-    }
-
-    public static class GestorTareasUsuario {
-        Queue<Tarea> tareasPendientes;
-    }
 }

@@ -1,5 +1,6 @@
 package org.proyecto.pia_2.controller.page_controllers;
 
+import org.proyecto.pia_2.model.Equipo;
 import org.proyecto.pia_2.service.EquipoServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,11 +26,13 @@ public class EquipoPageController {
         }
     }
 
-    @PostMapping("/editar-equipo/{id}")
+    @PostMapping("/equipo-editar/{id}")
     public String editarEquipo(@PathVariable("id") Long id, @RequestParam String nombre) {
         try {
+            Equipo equipo = equipoServicio.obtenerEquipoPorId(id);
+            Long entornoId = equipo.getEntornoTrabajo().getEntorno_id();
             equipoServicio.actualizarEquipo(id, nombre);
-            return "redirect:/?success=equipo_actualizado";
+            return "redirect:/entornosTrabajo/editar/" + entornoId + "?success=equipo_actualizado";
         } catch (Exception e) {
             e.printStackTrace();
             return "redirect:/entornosTrabajo/editar/" + id + "?error=error_actualizar";
