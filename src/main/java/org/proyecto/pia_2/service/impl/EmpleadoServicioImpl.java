@@ -1,9 +1,10 @@
-package org.proyecto.pia_2.service;
+package org.proyecto.pia_2.service.impl;
 
 import org.proyecto.pia_2.model.Empleado;
 import org.proyecto.pia_2.model.Equipo;
 import org.proyecto.pia_2.repository.EmpleadoRepository;
 import org.proyecto.pia_2.repository.EquipoRepository;
+import org.proyecto.pia_2.service.EmpleadoServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class EmpleadoServicioImpl implements EmpleadoServicio{
+public class EmpleadoServicioImpl implements EmpleadoServicio {
     @Autowired
     private EmpleadoRepository empleadoRepository;
     @Autowired

@@ -1,4 +1,4 @@
-package org.proyecto.pia_2.controller;
+package org.proyecto.pia_2.controller.page_controllers;
 
 import org.proyecto.pia_2.model.Empleado;
 import org.proyecto.pia_2.model.EntornoTrabajo;

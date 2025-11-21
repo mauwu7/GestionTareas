@@ -1,15 +1,16 @@
-package org.proyecto.pia_2.service;
+package org.proyecto.pia_2.service.impl;
 
 import org.proyecto.pia_2.model.Empleador;
 import org.proyecto.pia_2.model.EntornoTrabajo;
 import org.proyecto.pia_2.repository.EntornoTrabajoRepository;
+import org.proyecto.pia_2.service.EntornoServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class EntornoServicioImpl implements EntornoServicio{
+public class EntornoServicioImpl implements EntornoServicio {
     @Autowired
     private EntornoTrabajoRepository entornoRepository;
 

@@ -27,26 +27,27 @@ public class TareaServiceImpl implements TareaService {
     @Override
     public TareaIndividual AgregarTarea(TareaIndividual tarea, String nombreEmpleado) throws UsuarioNotFoundException {
         if(empleadoRepository.existsByUsername(nombreEmpleado)){
-            Empleado empleado = empleadoRepository.findEmpleadosByUsername(nombreEmpleado);
+            Empleado empleado = empleadoRepository.findByUsername(nombreEmpleado).orElseThrow();
+
+            tarea.setFechaCreacion(LocalDate.now());
 
             empleado.getTareasAsignadas().add(tarea);
             tarea.setEmpleado(empleado);
 
             tareaRepository.save(tarea);
-            empleadoRepository.save(empleado); //PROVSIONAL
+            empleadoRepository.save(empleado);
             return tarea;
         }
         else{
             throw new UsuarioNotFoundException("No se encuentra ningun usuario registrado con el nombre: " + nombreEmpleado);
         }
     }
-
     @Override
     public void EditarPrioridadTarea(Long id, Integer prioridad, String nombreEmpleado) throws UsuarioNotFoundException, TareaNotFoundException {
 
         if(empleadoRepository.existsByUsername(nombreEmpleado)){
             boolean flag = true;
-            Empleado empleado = empleadoRepository.findEmpleadosByUsername(nombreEmpleado);
+            Empleado empleado = empleadoRepository.findByUsername(nombreEmpleado).orElseThrow();
             List<TareaIndividual> tareas = empleado.getTareasAsignadas();
             for(TareaIndividual tarea : tareas){
                 if(tarea.getTarea_id().equals(id)){
@@ -72,7 +73,7 @@ public class TareaServiceImpl implements TareaService {
     public void EditarFechaVencimiento(Long id, LocalDate fechaVencimiento, String nombreEmpleado) throws UsuarioNotFoundException, TareaNotFoundException {
         if(empleadoRepository.existsByUsername(nombreEmpleado)){
             boolean flag = true;
-            Empleado empleado = empleadoRepository.findEmpleadosByUsername(nombreEmpleado);
+            Empleado empleado = empleadoRepository.findByUsername(nombreEmpleado).orElseThrow();
             List<TareaIndividual> tareas = empleado.getTareasAsignadas();
 
             for(TareaIndividual tarea : tareas){
@@ -101,7 +102,7 @@ public class TareaServiceImpl implements TareaService {
     public void FinalizarTarea(Long id, String nombreEmpleado) throws UsuarioNotFoundException, TareaNotFoundException {
         if(empleadoRepository.existsByUsername(nombreEmpleado)){
             boolean flag = true;
-            Empleado empleado =  empleadoRepository.findEmpleadosByUsername(nombreEmpleado);
+            Empleado empleado =  empleadoRepository.findByUsername(nombreEmpleado).orElseThrow();
             List<TareaIndividual>  tareas = empleado.getTareasAsignadas();
             Iterator<TareaIndividual> iterator = tareas.iterator();
             while(iterator.hasNext()){

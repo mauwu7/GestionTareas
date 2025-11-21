@@ -1,13 +1,12 @@
-package org.proyecto.pia_2.service;
+package org.proyecto.pia_2.service.impl;
 
 import org.proyecto.pia_2.dto.EmpleadorRegistroDTO;
 import org.proyecto.pia_2.model.Empleador;
 import org.proyecto.pia_2.repository.EmpleadorRepository;
+import org.proyecto.pia_2.service.EmpleadorServicio;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,4 +1,4 @@
-package org.proyecto.pia_2.controller;
+package org.proyecto.pia_2.controller.page_controllers;
 
 import org.proyecto.pia_2.service.EquipoServicio;
 import org.springframework.beans.factory.annotation.Autowired;

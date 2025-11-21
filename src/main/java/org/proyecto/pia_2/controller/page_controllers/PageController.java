@@ -1,10 +1,9 @@
-package org.proyecto.pia_2.controller;
+package org.proyecto.pia_2.controller.page_controllers;
 
 import org.proyecto.pia_2.model.Empleador;
 import org.proyecto.pia_2.model.EntornoTrabajo;
 import org.proyecto.pia_2.service.EmpleadorServicio;
 import org.proyecto.pia_2.service.EntornoServicio;
-import org.proyecto.pia_2.service.EquipoServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

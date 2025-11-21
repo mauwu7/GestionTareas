@@ -9,7 +9,6 @@ import org.proyecto.pia_2.exception.UsuarioRegistradoException;
 import org.proyecto.pia_2.exception.handler.GlobalHandlerException;
 import org.proyecto.pia_2.model.*;
 import org.proyecto.pia_2.repository.EmpleadorRepository;
-import org.proyecto.pia_2.service.impl.EmpleadorServiceimpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

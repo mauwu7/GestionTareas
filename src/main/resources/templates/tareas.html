@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asignar Tareas - Empleado</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .badge-estado {
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        .estado-pendiente {
+            background-color: #dc3545;
+            color: white;
+        }
+        .estado-progreso {
+            background-color: #ffc107;
+            color: black;
+        }
+        .estado-completada {
+            background-color: #28a745;
+            color: white;
+        }
+        .tarea-item {
+            border-left: 4px solid #dee2e6;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+        .tarea-item:hover {
+            background-color: #e9ecef;
+        }
+        .prioridad-alta {
+            border-left-color: #dc3545;
+        }
+        .prioridad-media {
+            border-left-color: #ffc107;
+        }
+        .prioridad-baja {
+            border-left-color: #28a745;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid py-4">
+    <div class="alert alert-info">
+        <h1><i class="fas fa-tasks me-2"></i>Gestión de Tareas</h1>
+        <p class="mb-0">Empleado: <strong th:text="${empleado.username}">Nombre Empleado</strong></p>
+        <p class="mb-0">Email: <strong th:text="${empleado.email}">email@empleado.com</strong></p>
+    </div>
+
+    <!-- Mensajes -->
+    <div th:if="${param.success}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        <span th:if="${param.success[0] == 'tarea_creada'}">Tarea creada exitosamente</span>
+        <span th:if="${param.success[0] == 'prioridad_actualizada'}">Prioridad de tarea actualizada</span>
+        <span th:if="${param.success[0] == 'fecha_actualizada'}">Fecha de vencimiento actualizada</span>
+        <span th:if="${param.success[0] == 'tarea_finalizada'}">Tarea finalizada exitosamente</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        <span th:if="${param.error[0] == 'error_crear_tarea'}">Error al crear la tarea</span>
+        <span th:if="${param.error[0] == 'error_actualizar_prioridad'}">Error al actualizar la prioridad</span>
+        <span th:if="${param.error[0] == 'error_actualizar_fecha'}">Error al actualizar la fecha</span>
+        <span th:if="${param.error[0] == 'error_finalizar_tarea'}">Error al finalizar la tarea</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="row">
+        <!-- Columna para crear tarea -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-plus-circle me-2"></i>Asignar Nueva Tarea</h5>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{'/tareas/asignar-tarea/' + ${empleado.usuario_id}}" method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Descripción *</label>
+                            <textarea class="form-control" name="descripcion" rows="3" required
+                                      placeholder="Describe la tarea a realizar..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Fecha de Vencimiento *</label>
+                            <input type="date" class="form-control" name="fechaVencimiento" required
+                                   th:min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Prioridad *</label>
+                            <select class="form-select" name="prioridad" required>
+                                <option value="">Seleccionar prioridad...</option>
+                                <option value="1">Alta</option>
+                                <option value="2">Media</option>
+                                <option value="3">Baja</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="fas fa-save me-2"></i>Asignar Tarea
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Columna para lista de tareas -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list-check me-2"></i>Tareas Asignadas
+                        <span class="badge bg-light text-dark ms-2" th:text="${#lists.size(tareas)}">0</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div th:if="${not #lists.isEmpty(tareas)}">
+                        <div th:each="tarea : ${tareas}" class="tarea-item"
+                             th:classappend="${tarea.prioridad == 1} ? 'prioridad-alta' :
+                                            (${tarea.prioridad == 2} ? 'prioridad-media' : 'prioridad-baja')">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h6 class="mb-0" th:text="${tarea.descripcion}">Descripción de la tarea</h6>
+                            </div>
+
+                            <!-- Información de fechas - VERSIÓN SEGURA -->
+                            <div class="row mb-2">
+                                <div class="col-md-6">
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar-plus me-1"></i>
+                                        Creada:
+                                        <span th:if="${tarea.fechaCreacion != null}">
+                                            <span th:text="${tarea.fechaCreacion}"></span>
+                                        </span>
+                                        <span th:if="${tarea.fechaCreacion == null}" class="text-danger">
+                                            No asignada
+                                        </span>
+                                    </small>
+                                </div>
+                                <div class="col-md-6">
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar-times me-1"></i>
+                                        Vence:
+                                        <span th:if="${tarea.fechaVencimiento != null}">
+                                            <span th:text="${tarea.fechaVencimiento}"></span>
+                                        </span>
+                                        <span th:if="${tarea.fechaVencimiento == null}" class="text-danger">
+                                            No asignada
+                                        </span>
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex flex-wrap gap-2 align-items-center">
+                                    <!-- Prioridad -->
+                                    <span class="badge"
+                                          th:classappend="${tarea.prioridad == 1} ? 'bg-danger' :
+                                                          (${tarea.prioridad == 2} ? 'bg-warning text-dark' : 'bg-success')">
+                                        <i class="fas fa-flag me-1"></i>
+                                        <span th:text="${tarea.prioridad == 1} ? 'Alta' :
+                                                       (${tarea.prioridad == 2} ? 'Media' : 'Baja')">
+                                            Prioridad
+                                        </span>
+                                    </span>
+
+                                    <!-- Formulario para editar prioridad -->
+                                    <form th:action="@{'/tareas/editar-prioridad/' + ${empleado.usuario_id} + '/' + ${tarea.tarea_id}}"
+                                          method="post" class="d-inline">
+                                        <select name="prioridad" class="form-select form-select-sm"
+                                                onchange="this.form.submit()"
+                                                style="width: auto; display: inline-block;">
+                                            <option value="1" th:selected="${tarea.prioridad == 1}">Alta</option>
+                                            <option value="2" th:selected="${tarea.prioridad == 2}">Media</option>
+                                            <option value="3" th:selected="${tarea.prioridad == 3}">Baja</option>
+                                        </select>
+                                    </form>
+
+                                    <!-- Formulario para editar fecha de vencimiento -->
+                                    <form th:action="@{'/tareas/editar-fecha/' + ${empleado.usuario_id} + '/' + ${tarea.tarea_id}}"
+                                          method="post" class="d-inline">
+                                        <input type="date" name="fechaVencimiento"
+                                               class="form-control form-control-sm"
+                                               th:value="${tarea.fechaVencimiento}"
+                                               style="width: auto; display: inline-block;"
+                                               onchange="this.form.submit()">
+                                    </form>
+                                </div>
+
+                                <!-- Botón para finalizar tarea -->
+                                <form th:action="@{'/tareas/finalizar/' + ${empleado.usuario_id} + '/' + ${tarea.tarea_id}}"
+                                      method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-success"
+                                            onclick="return confirm('¿Estás seguro de finalizar esta tarea?')"
+                                            title="Finalizar tarea">
+                                        <i class="fas fa-check"></i> Finalizar
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:if="${#lists.isEmpty(tareas)}" class="text-center py-4">
+                        <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No hay tareas asignadas</h5>
+                        <p class="text-muted">Asigna la primera tarea usando el formulario.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const fechaInput = document.querySelector('input[name="fechaVencimiento"]');
+        if (fechaInput) {
+            const hoy = new Date().toISOString().split('T')[0];
+            fechaInput.min = hoy;
+        }
+
+        // Establecer fecha mínima para los inputs de fecha de edición
+        const fechaEdicionInputs = document.querySelectorAll('input[name="fechaVencimiento"]');
+        fechaEdicionInputs.forEach(input => {
+            if (input.value === '') {
+                const hoy = new Date().toISOString().split('T')[0];
+                input.min = hoy;
+            }
+        });
+    });
+</script>
+</body>
+</html>
