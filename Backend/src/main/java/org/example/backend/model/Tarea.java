@@ -2,9 +2,11 @@ package org.example.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 
@@ -17,6 +19,13 @@ public class Tarea {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+
+    @Column(name = "createdAt",updatable = false, insertable = false, columnDefinition = " TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private String nombreTarea;
 
     @Column(nullable = false)
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -87,6 +96,22 @@ public class Tarea {
         this.empleado_id = empleado_id;
     }
 
+    public String getNombreTarea() {
+        return nombreTarea;
+    }
+
+    public void setNombreTarea(String nombreTarea) {
+        this.nombreTarea = nombreTarea;
+    }
+
+    public LocalDateTime getcreatedAt() {
+        return createdAt;
+    }
+
+    public void setcreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     @Override
     public String toString() {
         return "Tarea{" +
@@ -96,4 +121,7 @@ public class Tarea {
                 ", fechaCreacion=" + fechaCreacion +
                 '}';
     }
+
+
+
 }

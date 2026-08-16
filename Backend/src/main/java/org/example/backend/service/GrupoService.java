@@ -5,6 +5,6 @@ import org.example.backend.model.Empleado;
 
 public interface GrupoService {
 
-    Empleado agregarEmpleadoGrupo(Long id, Empleado empleado) throws GrupoNotFoundException;
+    Empleado agregarEmpleadoGrupo(Long id, Empleado empleado);
 
 }

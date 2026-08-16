@@ -43,4 +43,6 @@ public class GrupoController {
         Empleado empleado1 = grupoServiceimpl.agregarEmpleadoGrupo(id, empleado);
         return new ResponseEntity<>(empleado1, HttpStatus.CREATED);
     }
+
+
 }
