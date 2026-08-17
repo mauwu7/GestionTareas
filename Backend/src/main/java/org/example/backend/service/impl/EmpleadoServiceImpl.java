@@ -2,18 +2,12 @@ package org.example.backend.service.impl;
 
 import org.example.backend.DTO.TareaDTO;
 
-import org.example.backend.exception.UserNotFoundException;
-import org.example.backend.model.Empleado;
-import org.example.backend.model.Tarea;
 import org.example.backend.repository.EmpleadoRepository;
 import org.example.backend.repository.TareaRepository;
 import org.example.backend.service.EmpleadoService;
-import org.example.backend.service.PlanificadorTareas;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 
 @Service
@@ -36,18 +30,15 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 
     @Override
     public TareaDTO getTareasEmpleado(Long id) {
+
         TareaDTO tareaDTO = new TareaDTO();
-        Empleado empleado = empleadoRepository.findById(id).orElseThrow(()-> new UserNotFoundException("User Not found"));
-        List<Tarea> planificador = empleado.getTareas();
-        planificador.sort(new PlanificadorTareas());
-        tareaDTO.setPlanificadorTareas(planificador);
-
+        tareaDTO.setTareasOrden(tareaRepository.findTareaByIdEmpleadoOrdenada(id));
+        tareaDTO.setPlanificadorTareas(tareaRepository.findTareaByEmpleado_idOrderByPrioridadAscFechaVencimientoDesc(id));
         return tareaDTO;
+
     }
 
-    public List<Tarea> tareasEmpleado(Long id){
-        return tareaRepository.findTareaByIdEmpleadorOrdenada(id);
-    }
+
 
 
 }

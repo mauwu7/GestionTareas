@@ -29,15 +29,11 @@ public class EmpleadoController {
         empleadoServiceimpl.finalizarTarea(id);
     }
 
-    @GetMapping("/tareasEmpleado/{id}")
+    @GetMapping("/tareas/{id}")
     ResponseEntity<TareaDTO> tareasEmpleado(@PathVariable Long id){
-        return null;
+        return new ResponseEntity<>(empleadoServiceimpl.getTareasEmpleado(id), HttpStatus.FOUND);
     }
 
-    @GetMapping("/tareas/{id}")
-    ResponseEntity<List<Tarea>> getTareas(@PathVariable Long id){
-        return new ResponseEntity<>(empleadoServiceimpl.tareasEmpleado(id), HttpStatus.FOUND);
-    }
 
 
 
