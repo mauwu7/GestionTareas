@@ -2,15 +2,19 @@ package org.example.backend.controller;
 
 
 import org.example.backend.DTO.TareaDTO;
+import org.example.backend.model.Tarea;
 import org.example.backend.service.impl.EmpleadoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.util.List;
 
+
 @RestController
-@RequestMapping("empleado")
+@RequestMapping("/empleado")
 public class EmpleadoController {
 
     private final EmpleadoServiceImpl empleadoServiceimpl;
@@ -29,6 +33,12 @@ public class EmpleadoController {
     ResponseEntity<TareaDTO> tareasEmpleado(@PathVariable Long id){
         return null;
     }
+
+    @GetMapping("/tareas/{id}")
+    ResponseEntity<List<Tarea>> getTareas(@PathVariable Long id){
+        return new ResponseEntity<>(empleadoServiceimpl.tareasEmpleado(id), HttpStatus.FOUND);
+    }
+
 
 
 

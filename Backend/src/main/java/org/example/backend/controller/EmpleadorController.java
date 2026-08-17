@@ -2,7 +2,7 @@ package org.example.backend.controller;
 
 import jakarta.validation.Valid;
 import org.example.backend.model.*;
-import org.example.backend.repository.EmpleadorRepository;
+
 import org.example.backend.repository.TareaRepository;
 import org.example.backend.service.impl.EmpleadorServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +27,7 @@ public class EmpleadorController {
         this.tareaRepository = tareaRepository;
     }
 
+    //Provisional
     @PostMapping("/agregar")
     ResponseEntity<Empleador> agregar(@RequestBody @Valid Empleador empleador){
         Empleador empleador1 = empleadorServiceimpl.registrarEmpleador(empleador);
@@ -40,6 +41,7 @@ public class EmpleadorController {
         return new ResponseEntity<>(tareaRegistrada, HttpStatus.CREATED);
     }
 
+    //Provisional
     @DeleteMapping("/eliminar/{id}")
     public void eliminarTarea(@PathVariable Long id){
         tareaRepository.deleteById(id);

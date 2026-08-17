@@ -44,5 +44,4 @@ public class GrupoController {
         return new ResponseEntity<>(empleado1, HttpStatus.CREATED);
     }
 
-
 }

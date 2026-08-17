@@ -6,18 +6,18 @@ import java.util.List;
 
 public class TareaDTO {
 
-    private List<Tarea> tareasPl;
+    private List<Tarea> planificadorTareas;
     private List<Tarea> tareasOrden;
 
     public TareaDTO(){}
 
 
-    public List<Tarea> getTareasPl() {
-        return tareasPl;
+    public List<Tarea> getPlanificadorTareas() {
+        return planificadorTareas;
     }
 
-    public void setTareasPl(List<Tarea> tareasPl) {
-        this.tareasPl = tareasPl;
+    public void setPlanificadorTareas(List<Tarea> planificadorTareas) {
+        this.planificadorTareas = planificadorTareas;
     }
 
     public List<Tarea> getTareasOrden() {

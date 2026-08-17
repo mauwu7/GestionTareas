@@ -2,7 +2,6 @@ package org.example.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -21,6 +20,7 @@ public class Tarea {
     private Long id;
 
 
+    ///columnDefinition obliga a usar MysSQL
     @Column(name = "createdAt",updatable = false, insertable = false, columnDefinition = " TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
