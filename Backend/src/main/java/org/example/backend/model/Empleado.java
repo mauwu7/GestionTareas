@@ -12,6 +12,10 @@ public class Empleado extends Usuario {
     public Empleado() {
     }
 
+    public Empleado(String email, String username, String passwordUser, RolNombre rolNombre, String name){
+        super(email, username, passwordUser, rolNombre, name);
+    }
+
     @OneToMany(mappedBy = "empleado_id", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Tarea> tareas;

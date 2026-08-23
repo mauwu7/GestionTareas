@@ -12,6 +12,10 @@ public class Empleador extends Usuario{
     public Empleador() {
     }
 
+    public Empleador(String email, String username, String passwordUser, RolNombre rolNombre, String name){
+        super(email, username, passwordUser, rolNombre, name);
+    }
+
     @JsonManagedReference
     @OneToMany(mappedBy = "id_empleador", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Grupo> grupos;

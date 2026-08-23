@@ -22,6 +22,17 @@ public abstract class Usuario {
     @Column(nullable = false)
     private String passwordUser;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private RolNombre rol;
+
+    public RolNombre getRol() {
+        return rol;
+    }
+
+    public void setRol(RolNombre rol) {
+        this.rol = rol;
+    }
 
     public String getEmail() {
         return email;
@@ -66,4 +77,12 @@ public abstract class Usuario {
     }
 
     public Usuario(){}
+
+    public Usuario(String email, String username, String passwordUser, RolNombre rolNombre, String name){
+        this.rol = rolNombre;
+        this.name = name;
+        this.passwordUser = passwordUser;
+        this.username = username;
+        this.email = email;
+    }
 }

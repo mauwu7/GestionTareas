@@ -4,6 +4,8 @@ import org.example.backend.exception.UserNotFoundException;
 import org.example.backend.exception.UserRegisteredException;
 import org.example.backend.exception.model.ErrorDetails;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -24,5 +26,15 @@ public class GlobalHandlerException {
     @ExceptionHandler(GrupoRegisteredException.class)
     public ResponseEntity<ErrorDetails> GrupoRegisteredExceptionHandler(GrupoRegisteredException ex){
         return ResponseEntity.badRequest().body(new ErrorDetails(ex.getMessage(), "nombreGrupo"));
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<?> BadCredentialsExceptionHandler(BadCredentialsException ex){
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ErrorDetails> UserNameNotFoundExceptionHandler(UsernameNotFoundException ex){
+        return ResponseEntity.badRequest().body(new ErrorDetails(ex.getMessage(),"email"));
     }
 }

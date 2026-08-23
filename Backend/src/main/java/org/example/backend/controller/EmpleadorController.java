@@ -3,6 +3,8 @@ package org.example.backend.controller;
 import jakarta.validation.Valid;
 import org.example.backend.model.*;
 
+import org.example.backend.repository.EmpleadoRepository;
+import org.example.backend.repository.EmpleadorRepository;
 import org.example.backend.repository.TareaRepository;
 import org.example.backend.service.impl.EmpleadorServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +19,15 @@ public class EmpleadorController {
 
 
     private final EmpleadorServiceImpl empleadorServiceimpl;
-
-
     private final TareaRepository tareaRepository;
 
+    private final EmpleadorRepository empleadorRepository;
+
     @Autowired
-    public EmpleadorController(EmpleadorServiceImpl empleadorServiceimpl, TareaRepository tareaRepository){
+    public EmpleadorController(EmpleadorServiceImpl empleadorServiceimpl, TareaRepository tareaRepository, EmpleadorRepository empleadorRepository){
         this.empleadorServiceimpl = empleadorServiceimpl;
         this.tareaRepository = tareaRepository;
+        this.empleadorRepository = empleadorRepository;
     }
 
     //Provisional
@@ -47,6 +50,11 @@ public class EmpleadorController {
         tareaRepository.deleteById(id);
     }
 
+
+    @DeleteMapping("/eliminarEm/{id}")
+    public void eliminarEmpleado(@PathVariable Long id){
+        empleadorRepository.deleteById(id);
+    }
 
 
 }

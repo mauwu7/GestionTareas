@@ -30,7 +30,6 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 
     @Override
     public TareaDTO getTareasEmpleado(Long id) {
-
         TareaDTO tareaDTO = new TareaDTO();
         tareaDTO.setTareasOrden(tareaRepository.findTareaByIdEmpleadoOrdenada(id));
         tareaDTO.setPlanificadorTareas(tareaRepository.findTareaByEmpleado_idOrderByPrioridadAscFechaVencimientoDesc(id));
