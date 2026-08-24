@@ -30,12 +30,6 @@ public class EmpleadorController {
         this.empleadorRepository = empleadorRepository;
     }
 
-    //Provisional
-    @PostMapping("/agregar")
-    ResponseEntity<Empleador> agregar(@RequestBody @Valid Empleador empleador){
-        Empleador empleador1 = empleadorServiceimpl.registrarEmpleador(empleador);
-        return new ResponseEntity<>(empleador1, HttpStatus.CREATED);
-    }
 
 
     @PostMapping("/addTarea/{id}")

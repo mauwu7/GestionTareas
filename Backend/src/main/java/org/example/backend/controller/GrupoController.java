@@ -2,7 +2,8 @@ package org.example.backend.controller;
 
 
 import jakarta.validation.Valid;
-import org.example.backend.model.Empleado;
+import org.example.backend.DTO.UserDTO;
+
 import org.example.backend.model.Grupo;
 import org.example.backend.service.impl.EmpleadorServiceImpl;
 import org.example.backend.service.impl.GrupoServiceImpl;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/grupos")
+@RequestMapping("/grupo")
 public class GrupoController {
 
     private final GrupoServiceImpl grupoServiceimpl;
@@ -39,9 +40,8 @@ public class GrupoController {
     }
 
     @PostMapping("/agregarEmp/{id}")
-    ResponseEntity<Empleado> agregarEmpleadoGrupo(@PathVariable Long id, @RequestBody @Valid Empleado empleado){
-        Empleado empleado1 = grupoServiceimpl.agregarEmpleadoGrupo(id, empleado);
-        return new ResponseEntity<>(empleado1, HttpStatus.CREATED);
+    ResponseEntity<UserDTO> agregarEmpleadoGrupo(@PathVariable Long id, @RequestBody UserDTO userDTO){
+        return new ResponseEntity<>(grupoServiceimpl.agregarEmpleadoGrupo(id, userDTO), HttpStatus.CREATED);
     }
 
 }

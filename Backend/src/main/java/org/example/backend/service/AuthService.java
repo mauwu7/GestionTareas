@@ -9,6 +9,5 @@ public interface AuthService {
 
     LoginDTO loginUsuario(LoginDTO loginDTO);
 
-    UserDTO registrarEmpleado(UserDTO userDTO, Long id);
 
 }

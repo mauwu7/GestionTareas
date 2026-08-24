@@ -29,8 +29,8 @@ public class GlobalHandlerException {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<?> BadCredentialsExceptionHandler(BadCredentialsException ex){
-        return ResponseEntity.badRequest().body(ex.getMessage());
+    public ResponseEntity<ErrorDetails> BadCredentialsExceptionHandler(BadCredentialsException ex){
+        return ResponseEntity.badRequest().body(new ErrorDetails(ex.getMessage(), "null"));
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)

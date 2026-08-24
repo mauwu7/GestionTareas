@@ -4,6 +4,13 @@ public class UserDTO {
 
     public UserDTO(){}
 
+    public UserDTO(String email, String username, String name, String password) {
+        this.email = email;
+        this.username = username;
+        this.name = name;
+        this.password = password;
+    }
+
     private String email;
     private String username;
     private String name;
@@ -39,5 +46,15 @@ public class UserDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

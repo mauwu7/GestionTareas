@@ -4,6 +4,7 @@ package org.example.backend.service.impl;
 import org.example.backend.DTO.LoginDTO;
 import org.example.backend.DTO.UserDTO;
 import org.example.backend.exception.UserRegisteredException;
+import org.example.backend.model.Empleado;
 import org.example.backend.model.Empleador;
 import org.example.backend.model.RolNombre;
 import org.example.backend.repository.EmpleadoRepository;
@@ -25,20 +26,18 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private final EmpleadoRepository empleadoRepository;
     private final EmpleadorRepository empleadorRepository;
     private final UsuarioDetailsService usuarioDetailsService;
     private final UsuarioRepository usuarioRepository;
 
 
     @Autowired
-    public AuthServiceImpl(UsuarioRepository usuarioRepository ,UsuarioDetailsService usuarioDetailsService, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, JwtService jwtService, EmpleadorRepository empleadorRepository, EmpleadoRepository empleadoRepository){
+    public AuthServiceImpl(UsuarioRepository usuarioRepository ,UsuarioDetailsService usuarioDetailsService, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, JwtService jwtService, EmpleadorRepository empleadorRepository){
         this.usuarioDetailsService = usuarioDetailsService;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.empleadorRepository = empleadorRepository;
-        this.empleadoRepository = empleadoRepository;
         this.usuarioRepository = usuarioRepository;
     }
 
@@ -55,6 +54,8 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+
+
     @Override
     public LoginDTO loginUsuario(LoginDTO loginDTO) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
@@ -64,8 +65,4 @@ public class AuthServiceImpl implements AuthService {
         return loginDTO;
     }
 
-    @Override
-    public UserDTO registrarEmpleado(UserDTO userDTO, Long id) {
-        return null;
-    }
 }

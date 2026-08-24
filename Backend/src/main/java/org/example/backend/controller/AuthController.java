@@ -2,7 +2,7 @@ package org.example.backend.controller;
 
 import org.example.backend.DTO.LoginDTO;
 import org.example.backend.DTO.UserDTO;
-import org.example.backend.model.Empleador;
+
 import org.example.backend.service.impl.AuthServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ public class AuthController {
         this.authServiceImpl = authServiceImpl;
     }
 
-    @PostMapping("/registro/empleador")
+    @PostMapping("/registro")
     public ResponseEntity<UserDTO> registroEmpleador(@RequestBody UserDTO userDTO){
          return new ResponseEntity<>(authServiceImpl.registrarEmpleador(userDTO), HttpStatus.CREATED);
     }
