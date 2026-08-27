@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -45,7 +46,11 @@ class BackendApplicationTests {
                 andExpect(MockMvcResultMatchers.jsonPath("$.username").value("usuarioTest"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("usuario@gmail.com"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("usuario"));
+    }
 
-}
-
+    @Test
+    @WithMockUser(username = "empleado", roles = {"USER"})
+    void RolUsertieneAccesoRestringido() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.get("/grupo/2")).andExpect(status().isForbidden());
+    }
 }
