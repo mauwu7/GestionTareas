@@ -1,6 +1,7 @@
-import LoginForm from './components/LoginForm'
+import LoginForm from './components/LoginForm/LoginForm'
 
 function App() {
+    
     return (
         <LoginForm />
     )
