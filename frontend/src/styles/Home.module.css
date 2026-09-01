@@ -1,17 +1,28 @@
 .main{
     height: 100vh;
-    display: grid;
-    grid-template: 1fr / 1fr 5fr;
-    /* display: flex; */
-}
-.header{
-    border: 2px solid black;
-    /* flex: 1; */
+    display: flex; 
 }
 .nav{
     border: 2px solid black;
-    /* flex: 5; */
+    flex: 1;
+    background-color: #2196F3;
+    color: #FFFF;
+    display: flex;
+    flex-direction: column;
 }
 .body{
     border: 2px solid black;
+    flex: 5;
+}
+
+.headerNav{
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    font-size: 22px;
+    gap: 10px;
+}
+
+.navMenu{
+    display: grid;
 }
