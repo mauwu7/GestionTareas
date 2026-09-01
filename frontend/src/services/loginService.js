@@ -30,6 +30,10 @@ const createUser = async (content) => {
 
     const response = await fetch(`${baseUrl}/registro`, options)
 
+    if(!response.ok){
+        throw new Error('Creation of user failed')
+    }
+
     return await response.json()
 
 }

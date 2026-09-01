@@ -1,36 +1,35 @@
 import Login from './pages/Login'
 import { useEffect, useState } from 'react'
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import Register from './pages/Register'
+import Home from './pages/Home'
 
 function App() {
 
     const [token, setToken] = useState(null)
+    const [checkingSession, setCheckingSession] = useState(true)
 
     useEffect(()=>{
         const loggedUserJSON = window.localStorage.getItem('loggedUser')
         if(loggedUserJSON){
-            setToken(JSON.parse(loggedUserJSON))
+            try{
+              setToken(JSON.parse(loggedUserJSON))
+            }
+            catch{
+                window.localStorage.removeItem('loggedUser')
+            }
         }
-     },[token]) ///Cambiar
+        setCheckingSession(false)
+     },[]) 
 
+     if(checkingSession) return null
+
+     /*Cambio momentaneo  */
     return(
-        <>
-        {!token ? 
-        <Router>
-            <Routes>
-                <Route path='/' element={ <Login/> }/>
-                <Route path='/create' element={ <Register /> }/>
-            </Routes>
-        </Router>
-        :
-        <Router>
-            <Routes>
-                <Route path='/home'/>
-            </Routes>
-        </Router>
-        }
-        </>
+        <Routes>                            
+            <Route path='/' element={ !token ? <Home setToken={setToken}/>:<Home setToken={setToken}/>}/>
+            {!token && <Route path='/create' element={<Register />}/>}
+        </Routes>
     )
 }
 export default App

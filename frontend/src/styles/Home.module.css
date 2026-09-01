@@ -1,0 +1,17 @@
+.main{
+    height: 100vh;
+    display: grid;
+    grid-template: 1fr / 1fr 5fr;
+    /* display: flex; */
+}
+.header{
+    border: 2px solid black;
+    /* flex: 1; */
+}
+.nav{
+    border: 2px solid black;
+    /* flex: 5; */
+}
+.body{
+    border: 2px solid black;
+}

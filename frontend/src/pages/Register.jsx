@@ -15,7 +15,7 @@ export default function RegisterForm (){
 
     const handleCreate = async (event) =>{
         event.preventDefault()
-        await loginService.createUser({email, password, name, username})
+        await loginService.createUser({ email, password, name, username })
         setEmail('')
         setName('')
         setPassword('')
@@ -24,14 +24,14 @@ export default function RegisterForm (){
     }
 
     return(
-        <div className={styles.main}>
-            <h1 className={styles.header}>Create an account</h1>
-            <form className={styles.form} onSubmit={handleCreate}>
-                <Input type='text' field={username} name='Username' handler={setUsername}/>
-                <Input type='text' field={name} name='Name' handler={setName}/>
-                <Input type='password' field={password} name='Password' handler={setPassword}/>
-                <Input type='text' field={email} name='Email' handler={setEmail}/>
-                <button className={styles.button} type="submit">Submit</button>
+        <div className={ styles.main }>
+            <h1 className={ styles.header }>Create an account</h1>
+            <form className={ styles.form } onSubmit={ handleCreate }>
+                <Input type='text' field={ username } name='Username' handler={ setUsername }/>
+                <Input type='text' field={ name } name='Name' handler={setName}/>
+                <Input type='password' field={ password } name='Password' handler={ setPassword }/>
+                <Input type='text' field={ email } name='Email' handler={ setEmail }/>
+                <button className={ styles.button } type="submit">Submit</button>
             </form>
             <p>Already have an account? <Link to='/'>Sign in now !</Link></p>
         </div>
