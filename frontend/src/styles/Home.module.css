@@ -1,28 +1,81 @@
+/*Estilos principales*/
+
 .main{
     height: 100vh;
     display: flex; 
 }
 .nav{
-    border: 2px solid black;
     flex: 1;
     background-color: #2196F3;
     color: #FFFF;
     display: flex;
     flex-direction: column;
+    gap: 50px
 }
 .body{
-    border: 2px solid black;
+    display: flex;
+    flex-direction: column;
     flex: 5;
 }
+
+/*Estilos header*/
+
+.headerMain{
+    flex: 1;
+    display: flex;
+  
+}
+
+.headerMain > div:first-child{
+    display: flex;
+    align-items: center;
+    flex: 1;
+    padding: 10px;
+    font-weight: bold;
+    font-size: 20px;
+
+}
+
+
+.headerMain > div:last-child{
+    display: flex;
+    gap: 30px;
+    font-weight: bold;
+    padding: 15px;
+}
+
+
+.sectionMain{
+    background-color: #dce0ea;
+    flex: 6;
+    display: grid;
+    grid-template: 1fr 7fr / 3fr 1fr;
+}
+.sectionMain > h2{
+    padding: 10px;
+    align-self: center;
+
+}
+.sectionMain > h2:nth-child(2){
+    justify-self: center;
+}
+
+
+/*Estilos barra de navegacion izquierda*/
 
 .headerNav{
     padding: 15px;
     display: flex;
     align-items: center;
-    font-size: 22px;
+    font-size: 30px;
     gap: 10px;
 }
 
-.navMenu{
-    display: grid;
+.containerList > li{
+    display: flex;
+    font-weight: bold;
+    font-size: 20px;
+    gap: 20px;
+    padding: 15px;
 }
+
