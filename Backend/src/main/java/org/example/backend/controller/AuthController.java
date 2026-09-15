@@ -1,6 +1,7 @@
 package org.example.backend.controller;
 
 import org.example.backend.DTO.LoginDTO;
+import org.example.backend.DTO.TokenDTO;
 import org.example.backend.DTO.UserDTO;
 
 import org.example.backend.service.impl.AuthServiceImpl;
@@ -28,10 +29,9 @@ public class AuthController {
          return new ResponseEntity<>(authServiceImpl.registrarEmpleador(userDTO), HttpStatus.CREATED);
     }
 
-
     @PostMapping("/login")
-    public ResponseEntity<LoginDTO> loginUser(@RequestBody LoginDTO loginDTO){
-        return new ResponseEntity<>(authServiceImpl.loginUsuario(loginDTO), HttpStatus.ACCEPTED);
+    public ResponseEntity<TokenDTO> loginUser(@RequestBody LoginDTO loginDTO){
+        return new ResponseEntity<>(authServiceImpl.loginUsuario(loginDTO), HttpStatus.OK);
     }
 
 }
