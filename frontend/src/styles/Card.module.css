@@ -1,0 +1,20 @@
+.card{
+    border-radius: 10px;
+    background-color: #FFFF;
+    border-left: 10px solid #FBC02D;
+    box-shadow: 2px 4px 3px #adadad;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+    
+    & > p{
+        flex: 1;
+        color: #6d6e70;
+    }
+    &>div{
+        align-self: end;
+        display: flex;
+        gap: 10px;
+    }
+}

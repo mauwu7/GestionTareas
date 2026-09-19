@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import styles from '../styles/Home.module.css'
+import Card from '../components/Card'
 import { Icon } from '@mdi/react';
 import { mdiViewDashboard, mdiHome, mdiCardAccountDetailsOutline, mdiMessage, mdiNoteMultiple, mdiAccountGroup, mdiBellOutline, mdiAccount, mdiCog, mdiHelpBox, mdiSecurity } from "@mdi/js";
 
@@ -66,11 +67,39 @@ export default function Home ({ setToken }){
                 <section className={styles.sectionMain}>
                     <h2>Your Groups</h2>
                     <h2>Announcements</h2>
-                    <section style={{border: '1px solid black'}}>
-
+                    <section>
+                        <Card/>
+                        <Card />
+                        <Card />
+                        <Card /> 
+                        <p>Ver mas</p>
                     </section >
-                    <aside style={{border: '1px solid black'}}>
+                    <aside>
+                        <article className={styles.asideArticle}>
+                            <div>
+                                <h3>Site Maintenance</h3>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                                    Quisque nec orci enim. Vestibulum sed nisi eget nibh porta lobortis. 
+                                    Sed malesuada turpis at laoreet semper.
+                                </p>
+                            </div>
+                            <div>
+                                <h3>Community Share Day</h3>
+                                <p>Mauris vestibulum enim a commodo rutrum. 
+                                    Vestibulum rhoncus nulla lorem, sit amet molestie diam imperdiet scelerisque. 
+                                    Donec ipsum ante, dapibus eget orci non, volutpat placerat enim. 
+                                    In est tortor, elementum ac hendrerit quis, blandit quis augue.
+                                </p>
+                            </div>
+                            <div>
+                                <h3>Updated Privacy Policy</h3>
+                                <p>Aliquam vel vehicula libero. Nulla felis urna, cursus ac dui in, lobortis sollicitudin mauris.</p>
+                            </div>
+                        </article>
+                        <h2 style={{alignSelf:"center"}}>Tasks</h2>
+                        <article>
 
+                        </article>
                     </aside>
                 </section>
             </main>
