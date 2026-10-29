@@ -5,7 +5,7 @@
     display: flex; 
 }
 .nav{
-    flex: 1;
+
     flex-shrink: 0;
     background-color: #2196F3;
     color: #FFFF;
@@ -53,15 +53,16 @@
     background-color: #dce0ea;
     flex: 6;
     display: grid;
-    grid-template: auto 1fr /3fr 1fr;
-    column-gap: 20px;
+    grid-template: auto 1fr /3fr 1.2fr;
+    column-gap: 0;
 }
 
 .sectionMain > h2 ~ section{
     display: grid;
-    grid-template: 1fr 1fr / repeat(auto-fit, minmax(400px, 500px));
+    grid-template: 1fr 1fr / 1fr 1fr;
     gap: 30px;
     padding: 40px;
+    max-height: 800px;
 }
 
 
@@ -76,8 +77,8 @@
         flex: 1;
         border-radius: 10px;
         background-color: #FFFF;
-        box-shadow: 2px 4px 3px #adadad;;
-        
+        box-shadow: 2px 4px 3px #adadad;
+        padding: 20px;
     } 
 }
 
@@ -92,6 +93,27 @@
         }
     }
 }
+
+
+.asideArticleTasks{
+    max-height: 300px;
+    overflow: auto;
+     & > div{
+        display: flex;
+        gap: 10px;
+        padding: 10px;
+        border-bottom: 2px solid #adadad;
+        
+        & > h4{
+            align-self: center;
+        }
+    }
+
+    & > div:last-child{
+        border-bottom: none;
+    }
+}
+
 
 .sectionMain > h2{
     padding: 10px;

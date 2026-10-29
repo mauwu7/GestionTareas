@@ -5,11 +5,12 @@
     align-items: center;
     justify-content: center;
     gap: 30px;
-    background-color: #e8e0e0aa;
+    background-color: #dce0ea;
 }
 
 .form{
-    border: 2px solid black;
+    border-left: 10px solid #FBC02D;
+    box-shadow: 2px 4px 3px #adadad;
     padding: 30px;
     display: flex;
     flex-direction: column;

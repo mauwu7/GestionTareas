@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom"
 import styles from '../styles/Home.module.css'
 import Card from '../components/Card'
 import { Icon } from '@mdi/react';
-import { mdiViewDashboard, mdiHome, mdiCardAccountDetailsOutline, mdiMessage, mdiNoteMultiple, mdiAccountGroup, mdiBellOutline, mdiAccount, mdiCog, mdiHelpBox, mdiSecurity } from "@mdi/js";
+import { mdiViewDashboard, mdiHome, mdiCardAccountDetailsOutline, mdiMessage, mdiNoteMultiple, mdiAccountGroup, mdiBellOutline, mdiAccount, mdiCog, mdiHelpBox, mdiSecurity, mdiNoteEdit } from "@mdi/js";
 
 
 export default function Home ({ setToken }){
@@ -58,10 +58,10 @@ export default function Home ({ setToken }){
                         </div>
                     </div>
                     <div>
-                        <Icon path={mdiBellOutline} size={1.5}/>
-                        <Icon path={mdiCog}  size={1.5}/>
-                        <Icon path={mdiHelpBox} size={1.5} />
-                        <Icon path={mdiSecurity} size={1.5}/>
+                        <div><Icon path={mdiBellOutline} size={1.5}/></div>
+                        <div onClick={logOut}><Icon path={mdiCog} size={1.5}/></div>
+                        <div><Icon path={mdiHelpBox} size={1.5}/></div>
+                        <div><Icon path={mdiSecurity} size={1.5}/></div>
                     </div>
                 </header>
                 <section className={styles.sectionMain}>
@@ -72,18 +72,18 @@ export default function Home ({ setToken }){
                         <Card />
                         <Card />
                         <Card /> 
-                        <p>Ver mas</p>
+                        <p style={{alignSelf: 'center'}}>Ver mas</p>
                     </section >
                     <aside>
                         <article className={styles.asideArticle}>
-                            <div>
+                            <div style={{borderBottom: '1px solid #adadad'}}>
                                 <h3>Site Maintenance</h3>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
                                     Quisque nec orci enim. Vestibulum sed nisi eget nibh porta lobortis. 
                                     Sed malesuada turpis at laoreet semper.
                                 </p>
                             </div>
-                            <div>
+                            <div style={{borderBottom: '1px solid #adadad'}}>
                                 <h3>Community Share Day</h3>
                                 <p>Mauris vestibulum enim a commodo rutrum. 
                                     Vestibulum rhoncus nulla lorem, sit amet molestie diam imperdiet scelerisque. 
@@ -97,7 +97,48 @@ export default function Home ({ setToken }){
                             </div>
                         </article>
                         <h2 style={{alignSelf:"center"}}>Tasks</h2>
-                        <article>
+
+                        <article className={styles.asideArticleTasks}>
+                            
+                            <div>
+                                <Icon path={mdiNoteEdit} size={2}/>
+                                <h4>Task 1</h4>
+                            </div>
+                            
+                            <div>
+                                <Icon path={mdiNoteEdit} size={2}/>
+                                <h4>Task 1</h4>
+                            </div>
+                            
+                            <div>
+                                <Icon path={mdiNoteEdit} size={2}/>
+                                <h4>Task 1</h4>
+                            </div>
+
+                           <div>
+                                <Icon path={mdiNoteEdit} size={2}/>
+                                <h4>Task 1</h4>
+                            </div>
+                            
+                            <div>
+                                <Icon path={mdiNoteEdit} size={2}/>
+                                <h4>Task 1</h4>
+                            </div>
+                            
+                            <div>
+                                <Icon path={mdiNoteEdit} size={2}/>
+                                <h4>Task 1</h4>
+                            </div>
+                            
+                            <div>
+                                <Icon path={mdiNoteEdit} size={2}/>
+                                <h4>Task 1</h4>
+                            </div>
+
+                            <div>
+                                <Icon path={mdiNoteEdit} size={2}/>
+                                <h4>Task 1</h4>
+                            </div>
 
                         </article>
                     </aside>
